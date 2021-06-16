@@ -1,0 +1,19 @@
+{
+  "name": "com.hibzz.console",
+  "version": "0.1.0",
+  "displayName": "hibzz.unity.console",
+  "description": "A flexible in-game console",
+  "unity": "2020.1",
+  "documentationUrl": "https://github.com/Hibzz-Games/Unity-Console/documentation.md",
+  "changelogUrl": "https://github.com/Hibzz-Games/Unity-Console/CHANGELOG.md",
+  "licensesUrl": "https://github.com/Hibzz-Games/Unity-Console/LICENSE.md",
+  "dependencies": {
+    "com.unity.ugui": "1.0.0",
+    "com.unity.textmeshpro": "3.0.0"
+ },
+  "author": {
+    "name": "Hibzz Games",
+    "email": "support@hibzz.games",
+    "url": "https://hibzz.games/"
+  }
+}
