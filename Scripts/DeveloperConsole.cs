@@ -15,7 +15,7 @@ namespace Hibzz.Console
 	public class DeveloperConsole
 	{
 		private readonly string prefix;							// the prefix to process the registered commands
-		private readonly IEnumerable<ConsoleCommand> commands; // registered list of commands
+		private readonly IEnumerable<ConsoleCommand> commands;  // registered list of commands
 
 		/// <summary>
 		/// constructor that takes in a prefix and list of commands

@@ -79,7 +79,9 @@ namespace Hibzz.Console
 			if(!inputField.isFocused)
 			{
 				uiCanvas.SetActive(true);
+				inputField.text = inputField.text + ((char)activationKeyCode);
 				inputField.ActivateInputField();
+				inputField.caretPosition = inputField.text.Length;
 			}
 		}
 
@@ -89,6 +91,9 @@ namespace Hibzz.Console
 		/// <param name="input"> The input string to process </param>
 		public void ProcessCommand(string input)
 		{
+			// if return wasn't pressed that frame, then don't process the command
+			if(!Input.GetKeyDown(KeyCode.Return)) { return; }
+
 			DeveloperConsole.ProcessCommand(input);
 			inputField.text = string.Empty;
 		}
