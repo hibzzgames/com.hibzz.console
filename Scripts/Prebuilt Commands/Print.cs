@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Hibzz.Console
 {
 	[CommandTooltip("Prints a message to the developer console")]
-	[CreateAssetMenu(fileName = "PrintCommand", menuName = "Utilities/Console/Commands/Print")]
+	[CreateAssetMenu(fileName = "PrintCmd", menuName = "Console/Built-in Commands/Print")]
 	public class Print : ConsoleCommand
 	{
 		public override bool Process(string[] args)

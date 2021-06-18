@@ -16,6 +16,9 @@ namespace Hibzz.Console
 
 		private CyclicQueue<Log> logs;
 
+		// variable to store the current command temporarily
+		private string tempCmd = "";
+
 		/// <summary>
 		/// constructor that takes in a prefix and list of commands
 		/// </summary>
@@ -43,6 +46,8 @@ namespace Hibzz.Console
 				return; 
 			}
 
+			tempCmd = input;
+
 			// remove the prefix and split the command by spaces
 			input = input.Remove(0, prefix.Length);
 			string[] inputsplit = input.Split(' ');
@@ -68,6 +73,8 @@ namespace Hibzz.Console
 				// if it doesn't match the command string, then check for the next
 				if(!commandInput.Equals(command.CommandWord, StringComparison.OrdinalIgnoreCase))
 				{ continue; }
+
+				DeveloperConsoleUI.Log(tempCmd);
 
 				if(!command.Process(args))
 				{
