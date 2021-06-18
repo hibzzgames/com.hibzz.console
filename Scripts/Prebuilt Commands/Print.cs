@@ -1,7 +1,7 @@
-/* Script:		Print.cs
+/* Description: Prints a message to the developer console
  * Author:		Hibnu Hishath (sliptrixx)
- * Date:		17 June, 2021
- * Description: Prints a message to the developer console */
+ * Date:		17 June, 2021 
+ */
 
 using UnityEngine;
 

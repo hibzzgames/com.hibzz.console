@@ -1,9 +1,7 @@
-//-----------------------------------------------------------------------------
-// Script:			DeveloperConsoleUI.cs
-// Author:			Hibnu Hishath (sliptrixx)
-// Date:			17 June, 2021
-// Description:		The UI instance of a developer console
-//-----------------------------------------------------------------------------
+/* Description: The UI instance of a developer console
+ * Author:		Hibnu Hishath (sliptrixx)
+ * Date:		17 June, 2021
+ */
 
 using UnityEngine;
 using TMPro;

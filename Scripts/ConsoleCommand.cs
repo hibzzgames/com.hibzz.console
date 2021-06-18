@@ -1,9 +1,7 @@
-//-----------------------------------------------------------------------------
-// Script:			ConsoleCommand.cs
-// Author:			Hibnu Hishath (sliptrixx)
-// Date:			17 June, 2021
-// Description:		An abstract class that represents a console command
-//-----------------------------------------------------------------------------
+/* Description: An abstract class that represents a console command
+ * Author:		Hibnu Hishath (sliptrixx)
+ * Date:		17 June, 2021
+ */
 
 using UnityEngine;
 

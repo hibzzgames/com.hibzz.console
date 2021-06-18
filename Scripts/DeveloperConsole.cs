@@ -1,10 +1,7 @@
-//-----------------------------------------------------------------------------
-// Script:			DeveloperConsole.cs
-// Author:			Hibnu Hishath (sliptrixx)
-// Date:			17 June, 2021
-// Description:		The core logic for implementing the in-game developer
-//					console
-//-----------------------------------------------------------------------------
+/* Description: The core logic for implementing the in-game developer console
+ * Author:		Hibnu Hishath (sliptrixx)
+ * Date:		17 June, 2021
+ */
 
 using System;
 using System.Collections.Generic;
