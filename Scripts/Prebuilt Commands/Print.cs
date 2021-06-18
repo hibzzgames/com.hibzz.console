@@ -14,7 +14,7 @@ namespace Hibzz.Console
 		public override bool Process(string[] args)
 		{
 			string text = string.Join(" ", args);
-			Debug.Log("Print: " + text);
+			DeveloperConsoleUI.Log(text);
 			
 			return true;
 		}

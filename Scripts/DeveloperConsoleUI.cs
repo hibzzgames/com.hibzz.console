@@ -3,11 +3,12 @@
  * Date:		17 June, 2021
  */
 
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 namespace Hibzz.Console
 {
+
 	public class DeveloperConsoleUI : MonoBehaviour
 	{
 		[SerializeField] private string prefix = string.Empty;
@@ -16,6 +17,7 @@ namespace Hibzz.Console
 		[Header("UI")]
 		[SerializeField] private GameObject uiCanvas = null;
 		[SerializeField] private TMP_InputField inputField = null;
+		[SerializeField] private TMP_Text logUI = null;
 
 		[Header("Input")]
 		[SerializeField] private KeyCode activationKeyCode = KeyCode.Slash;
@@ -50,6 +52,7 @@ namespace Hibzz.Console
 			// to be not destroyed on load
 			instance = this;
 			DontDestroyOnLoad(gameObject);
+			logUI.text = string.Empty;
 		}
 
 		private void Update()
@@ -94,6 +97,25 @@ namespace Hibzz.Console
 
 			DeveloperConsole.ProcessCommand(input);
 			inputField.text = string.Empty;
+		}
+
+		/// <summary>
+		/// Add message as a log to the logger
+		/// </summary>
+		/// <param name="message"> The message to add </param>
+		private void AddLog(string message)
+		{
+			DeveloperConsole.AddLog(message);
+			logUI.text = developerConsole.GetLogs();
+		}
+
+		/// <summary>
+		/// Static class that adds a log to the singleton instance
+		/// </summary>
+		/// <param name="message"> the message to add </param>
+		public static void Log(string message)
+		{
+			instance.AddLog(message);
 		}
 	}
 }
