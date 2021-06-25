@@ -67,8 +67,20 @@ namespace Hibzz.Console
 
 			// If hovered and scrolling
 			if(IsHoveredOverConsole()) 
-			{ 
-				//Debug.Log("Hovered!!!"); 
+			{
+				// print scroll
+				Vector2 scrollvec = Input.mouseScrollDelta;
+				if(scrollvec.y > 0) 
+				{
+					DeveloperConsole.ScrollUp();
+					UpdateLogText();
+
+				}
+				else if(scrollvec.y < 0)
+				{
+					DeveloperConsole.ScrollDown();
+					UpdateLogText();
+				}
 			}
 		}
 
@@ -89,7 +101,7 @@ namespace Hibzz.Console
 			if(!inputField.isFocused)
 			{
 				uiCanvas.SetActive(true);
-				inputField.text = inputField.text + ((char)activationKeyCode);
+				inputField.text += ((char)activationKeyCode);
 				inputField.ActivateInputField();
 				inputField.caretPosition = inputField.text.Length;
 			}
@@ -115,7 +127,7 @@ namespace Hibzz.Console
 		private void AddLog(string message)
 		{
 			DeveloperConsole.AddLog(message);
-			logUI.text = developerConsole.GetLogs();
+			UpdateLogText();
 		}
 
 		/// <summary>
@@ -133,7 +145,7 @@ namespace Hibzz.Console
 		private void ClearLogs()
 		{
 			DeveloperConsole.Clear();
-			logUI.text = developerConsole.GetLogs();
+			UpdateLogText();
 		}
 
 		/// <summary>
@@ -148,7 +160,7 @@ namespace Hibzz.Console
 		/// Is the user currently hovering over the console panel
 		/// </summary>
 		/// <returns> True if the user is hovering over the console panel </returns>
-		public bool IsHoveredOverConsole()
+		private bool IsHoveredOverConsole()
 		{
 			PointerEventData pointerEventData = new PointerEventData(EventSystem.current); // can be cached
 			pointerEventData.position = Input.mousePosition;
@@ -164,6 +176,14 @@ namespace Hibzz.Console
 			}
 
 			return false;
+		}
+
+		/// <summary>
+		/// Updates the log text
+		/// </summary>
+		private void UpdateLogText()
+		{
+			logUI.text = developerConsole.GetLogs();
 		}
 	}
 }

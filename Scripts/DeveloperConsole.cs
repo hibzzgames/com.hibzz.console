@@ -15,7 +15,8 @@ namespace Hibzz.Console
 		private readonly string prefix;							// the prefix to process the registered commands
 		private readonly IEnumerable<ConsoleCommand> commands;  // registered list of commands
 
-		private CyclicQueue<Log> logs;
+		private CyclicQueue<Log> logs;							// data structure used to store the logs
+		private int scrollPos = 0;								// variable that keeps track of current scroll position
 
 		/// <summary>
 		/// constructor that takes in a prefix and list of commands
@@ -27,7 +28,7 @@ namespace Hibzz.Console
 			this.prefix = prefix;
 			this.commands = commands;
 
-			this.logs = new CyclicQueue<Log>(4);
+			this.logs = new CyclicQueue<Log>(100);
 		}
 
 		/// <summary>
@@ -91,7 +92,7 @@ namespace Hibzz.Console
 			// 6 (7 - 1 = 6) is the number of messages I've configured.
 			// At a later point I must change it to something that users can configure from the
 			// editor like the logger size or something
-			for (int i = logs.Count - 1; i >= logs.Count - 7; --i)
+			for (int i = scrollPos - 1; i >= scrollPos - 6 - 1; --i)
 			{
 				// skip if it's an invalid element
 				if(i < 0) { return result; }
@@ -107,6 +108,13 @@ namespace Hibzz.Console
 		/// <param name="message"> The message to print </param>
 		public void AddLog(string message)
 		{
+			// if not all the way to the bottom, 
+			// then increment the scroll position so that the user sees the latest log
+			if (scrollPos == logs.Count)
+			{
+				++scrollPos;
+			}
+
 			logs.Enqueue(new Log(message));
 		}
 
@@ -116,6 +124,28 @@ namespace Hibzz.Console
 		public void Clear()
 		{
 			logs.Clear();
+			scrollPos = 0;
+		}
+
+		/// <summary>
+		/// Scroll up the console
+		/// </summary>
+		public void ScrollUp()
+		{
+			if(logs.Count > 6 - 1)
+			{
+				--scrollPos;
+				scrollPos = Mathf.Clamp(scrollPos, 6 - 2, logs.Count);
+			}
+		}
+
+		/// <summary>
+		/// Scroll down the console
+		/// </summary>
+		public void ScrollDown()
+		{
+			++scrollPos;
+			scrollPos = Mathf.Clamp(scrollPos, 0, logs.Count);
 		}
 	}
 }
