@@ -4,7 +4,9 @@
  */
 
 using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Hibzz.Console
 {
@@ -18,6 +20,7 @@ namespace Hibzz.Console
 		[SerializeField] private GameObject uiCanvas = null;
 		[SerializeField] private TMP_InputField inputField = null;
 		[SerializeField] private TMP_Text logUI = null;
+		[SerializeField] private GameObject UIPanel = null;
 
 		[Header("Input")]
 		[SerializeField] private KeyCode activationKeyCode = KeyCode.Slash;
@@ -60,6 +63,12 @@ namespace Hibzz.Console
 			if(Input.GetKeyDown(activationKeyCode))
 			{
 				ActivateConsole();
+			}
+
+			// If hovered and scrolling
+			if(IsHoveredOverConsole()) 
+			{ 
+				//Debug.Log("Hovered!!!"); 
 			}
 		}
 
@@ -116,6 +125,45 @@ namespace Hibzz.Console
 		public static void Log(string message)
 		{
 			instance.AddLog(message);
+		}
+
+		/// <summary>
+		/// clears the logs in the developer console
+		/// </summary>
+		private void ClearLogs()
+		{
+			DeveloperConsole.Clear();
+			logUI.text = developerConsole.GetLogs();
+		}
+
+		/// <summary>
+		/// Static function that clears the singleton log
+		/// </summary>
+		public static void Clear()
+		{
+			instance.ClearLogs();
+		}
+
+		/// <summary>
+		/// Is the user currently hovering over the console panel
+		/// </summary>
+		/// <returns> True if the user is hovering over the console panel </returns>
+		public bool IsHoveredOverConsole()
+		{
+			PointerEventData pointerEventData = new PointerEventData(EventSystem.current); // can be cached
+			pointerEventData.position = Input.mousePosition;
+
+			List<RaycastResult> raycastResults = new List<RaycastResult>(); // can be cached as well
+			EventSystem.current.RaycastAll(pointerEventData, raycastResults);
+
+			// if it's hovered over the UI panel, then we return true
+			// else we continue and eventually return false
+			foreach (RaycastResult result in raycastResults)
+			{
+				if(result.gameObject == UIPanel) { return true; }
+			}
+
+			return false;
 		}
 	}
 }

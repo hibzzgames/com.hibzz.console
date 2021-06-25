@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Hibzz.Console
 {
@@ -15,9 +16,6 @@ namespace Hibzz.Console
 		private readonly IEnumerable<ConsoleCommand> commands;  // registered list of commands
 
 		private CyclicQueue<Log> logs;
-
-		// variable to store the current command temporarily
-		private string tempCmd = "";
 
 		/// <summary>
 		/// constructor that takes in a prefix and list of commands
@@ -46,8 +44,6 @@ namespace Hibzz.Console
 				return; 
 			}
 
-			tempCmd = input;
-
 			// remove the prefix and split the command by spaces
 			input = input.Remove(0, prefix.Length);
 			string[] inputsplit = input.Split(' ');
@@ -73,8 +69,6 @@ namespace Hibzz.Console
 				// if it doesn't match the command string, then check for the next
 				if(!commandInput.Equals(command.CommandWord, StringComparison.OrdinalIgnoreCase))
 				{ continue; }
-
-				DeveloperConsoleUI.Log(tempCmd);
 
 				if(!command.Process(args))
 				{
@@ -114,6 +108,14 @@ namespace Hibzz.Console
 		public void AddLog(string message)
 		{
 			logs.Enqueue(new Log(message));
+		}
+
+		/// <summary>
+		/// Clears all logs in the in-game logger
+		/// </summary>
+		public void Clear()
+		{
+			logs.Clear();
 		}
 	}
 }
