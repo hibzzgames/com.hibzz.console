@@ -3,9 +3,8 @@
   "version": "0.1.0",
   "displayName": "hibzz.unity.console",
   "description": "A flexible in-game console",
-  "documentationUrl": "https://github.com/Hibzz-Games/com.hibzz.console/documentation.md",
   "changelogUrl": "https://github.com/Hibzz-Games/com.hibzz.console/CHANGELOG.md",
-  "licensesUrl": "https://github.com/Hibzz-Games/com.hibzz.console/LICENSE.md",
+  "licensesUrl": "https://github.com/Hibzz-Games/com.hibzz.console/LICENSE",
   "dependencies": {
     "com.unity.ugui": "1.0.0",
     "com.unity.textmeshpro": "3.0.0"
