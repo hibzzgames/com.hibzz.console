@@ -13,7 +13,7 @@ namespace Hibzz.Console
 	{
 		public override bool Process(string[] args)
 		{
-			DeveloperConsoleUI.Log(Application.version);
+			DeveloperConsoleUI.Log("Version: " + Application.version);
 			return true;
 		}
 	}
