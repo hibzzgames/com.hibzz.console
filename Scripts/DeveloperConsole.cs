@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace Hibzz.Console
@@ -115,6 +116,9 @@ namespace Hibzz.Console
 				++scrollPos;
 			}
 
+			// detect the links
+			message = DetectLinks(message);
+
 			logs.Enqueue(new Log(message));
 		}
 
@@ -146,6 +150,24 @@ namespace Hibzz.Console
 		{
 			++scrollPos;
 			scrollPos = Mathf.Clamp(scrollPos, 0, logs.Count);
+		}
+
+		/// <summary>
+		/// Detects strings and replace them with link tags
+		/// </summary>
+		/// <param name="message"> The message to look for links in </param>
+		/// <returns> A string where the urls are replaced with links </returns>
+		private string DetectLinks(string message)
+		{
+			Regex regex = new Regex("https://([\\w+?\\.\\w+])+([a-zA-Z0-9\\~\\!\\@\\#\\$\\%\\^\\&amp;\\*\\(\\)_\\-\\=\\+\\\\\\/\\?\\.\\:\\;\\'\\,]*)?", RegexOptions.IgnoreCase);
+			MatchCollection matches = regex.Matches(message);
+
+			foreach (Match match in matches)
+			{
+				message = message.Replace(match.Value, "<link=\"" + match.Value + "\">" + match.Value + "</link>");
+			}
+
+			return message;
 		}
 	}
 }
