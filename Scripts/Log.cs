@@ -14,18 +14,29 @@ namespace Hibzz.Console
 	{
 		public readonly string message;
 		public readonly DateTime time;
+		public readonly Color color;
 
-		// constructor
-		public Log(string message)
+		// constructor with custom color
+		public Log(string message, Color color)
 		{
 			this.message = message;
 			this.time = DateTime.Now;
+			this.color = color;
 		}
 
 		// Format and print the log message
 		public new string ToString()
 		{
-			return "[" + time.ToString("hh:mm") + "] " + message; 
+			string result = "[" + time.ToString("hh:mm") + "] " + message;
+
+			// if the color isn't the default color, then add the custom color tags
+			if(color != DeveloperConsoleUI.instance.DefaultColor)
+			{
+				result = "<color=#" + ColorUtility.ToHtmlStringRGBA(color) + ">" 
+					+ result + "</color>";
+			}
+
+			return result;
 		}
 	}
 }

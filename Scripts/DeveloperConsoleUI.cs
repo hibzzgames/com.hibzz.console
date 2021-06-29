@@ -25,8 +25,16 @@ namespace Hibzz.Console
 		[Header("Input")]
 		[SerializeField] private KeyCode activationKeyCode = KeyCode.Slash;
 
+		[Header("Visuals")]
+		[SerializeField] private Color defaultColor = Color.white;
+		public Color DefaultColor
+		{
+			get { return defaultColor; }
+			set { defaultColor = value; UpdateDefaultColor(); }
+		}
+
 		// Singleton UI instancce
-		private static DeveloperConsoleUI instance;
+		public static DeveloperConsoleUI instance;
 
 		private DeveloperConsole developerConsole;
 		private DeveloperConsole DeveloperConsole
@@ -84,6 +92,11 @@ namespace Hibzz.Console
 			}
 		}
 
+		private void OnValidate()
+		{
+			UpdateDefaultColor();
+		}
+
 		/// <summary>
 		/// Toggle the UI
 		/// </summary>
@@ -124,9 +137,10 @@ namespace Hibzz.Console
 		/// Add message as a log to the logger
 		/// </summary>
 		/// <param name="message"> The message to add </param>
-		private void AddLog(string message)
+		/// <param name="color"> The color of the message </param>
+		private void AddLog(string message, Color color)
 		{
-			DeveloperConsole.AddLog(message);
+			DeveloperConsole.AddLog(message, color);
 			UpdateLogText();
 		}
 
@@ -136,7 +150,17 @@ namespace Hibzz.Console
 		/// <param name="message"> the message to add </param>
 		public static void Log(string message)
 		{
-			instance.AddLog(message);
+			instance.AddLog(message, instance.DefaultColor);
+		}
+
+		/// <summary>
+		/// Static function that adds a log to the singleton instance
+		/// </summary>
+		/// <param name="message"> The message to add </param>
+		/// <param name="color"> The color of the message </param>
+		public static void Log(string message, Color color)
+		{
+			instance.AddLog(message, color);
 		}
 
 		/// <summary>
@@ -184,6 +208,14 @@ namespace Hibzz.Console
 		private void UpdateLogText()
 		{
 			logUI.text = developerConsole.GetLogs();
+		}
+
+		/// <summary>
+		/// Updates the default color of other elements assosciated with it
+		/// </summary>
+		private void UpdateDefaultColor()
+		{
+			logUI.color = defaultColor;
 		}
 	}
 }

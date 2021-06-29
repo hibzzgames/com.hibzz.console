@@ -104,10 +104,11 @@ namespace Hibzz.Console
 		}
 
 		/// <summary>
-		/// Add a log with the given message
+		/// Add a log with the given message and color
 		/// </summary>
 		/// <param name="message"> The message to print </param>
-		public void AddLog(string message)
+		/// <param name="color"> The color of the message </param>
+		public void AddLog(string message, Color color)
 		{
 			// if not all the way to the bottom, 
 			// then increment the scroll position so that the user sees the latest log
@@ -119,7 +120,7 @@ namespace Hibzz.Console
 			// detect the links
 			message = DetectLinks(message);
 
-			logs.Enqueue(new Log(message));
+			logs.Enqueue(new Log(message, color));
 		}
 
 		/// <summary>
