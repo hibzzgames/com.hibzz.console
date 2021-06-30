@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: ClearCmd
   m_EditorClassIdentifier: 
   CommandWord: Clear
+  IncludeInScan: 1

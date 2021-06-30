@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: VersionCmd
   m_EditorClassIdentifier: 
   CommandWord: version
+  IncludeInScan: 1

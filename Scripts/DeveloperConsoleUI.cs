@@ -7,14 +7,14 @@ using TMPro;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEditor;
 
 namespace Hibzz.Console
 {
-
 	public class DeveloperConsoleUI : MonoBehaviour
 	{
 		[SerializeField] private string prefix = string.Empty;
-		[SerializeField] private ConsoleCommand[] commands = new ConsoleCommand[0];
+		[SerializeField] private List<ConsoleCommand> commands = new List<ConsoleCommand>();
 
 		[Header("UI")]
 		[SerializeField] private GameObject uiCanvas = null;
@@ -217,5 +217,56 @@ namespace Hibzz.Console
 		{
 			logUI.color = defaultColor;
 		}
+
+		#if UNITY_EDITOR
+
+		/// <summary>
+		/// [Editor only function] Scans for new commands
+		/// </summary>
+		public void Scan()
+		{
+			// clear the list of existing commands
+			commands.Clear();
+
+			// use tags to scan the asset database
+			string[] guids = AssetDatabase.FindAssets("t:" + typeof(ConsoleCommand).Name);
+			foreach(string guid in guids)
+			{
+				// get the command from the guid
+				string path = AssetDatabase.GUIDToAssetPath(guid);
+				ConsoleCommand command = AssetDatabase.LoadAssetAtPath<ConsoleCommand>(path);
+
+				// if the command is marked to include in the scan,
+				// then we add it to the list of commands
+				if (command.IncludeInScan)
+				{
+					commands.Add(command);
+				}
+			}
+		}
+
+		#endif
 	}
+
+	#if UNITY_EDITOR
+
+	[CustomEditor(typeof(DeveloperConsoleUI))]
+	public class DeveloperConsoleInspector : Editor
+	{
+		public override void OnInspectorGUI()
+		{
+			// Draw the default inspector and some spacing below it
+			DrawDefaultInspector();
+			GUILayout.Space(10);
+
+			// Draw a button that scans for new commands
+			DeveloperConsoleUI console = target as DeveloperConsoleUI;
+			if(GUILayout.Button("Scan for Commands", GUILayout.Height(25)))
+			{
+				console.Scan();
+			}
+		}
+	}
+
+	#endif
 }
