@@ -131,12 +131,7 @@ namespace Hibzz.Console
 			if(!inputField.isFocused)
 			{
 				uiCanvas.SetActive(true);
-
-				#if ENABLE_INPUT_SYSTEM
-				#else
-				inputField.text += ((char)activationKeyCode);
-				#endif
-
+				inputField.text += prefix;
 				inputField.ActivateInputField();
 				inputField.caretPosition = inputField.text.Length;
 			}
