@@ -9,6 +9,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEditor;
 
+#if ENABLE_INPUT_SYSTEM
+	using UnityEngine.InputSystem;
+#endif
+
 namespace Hibzz.Console
 {
 	public class DeveloperConsoleUI : MonoBehaviour
@@ -23,7 +27,11 @@ namespace Hibzz.Console
 		[SerializeField] private GameObject UIPanel = null;
 
 		[Header("Input")]
+		#if ENABLE_INPUT_SYSTEM
+		[SerializeField] private Key activationKey = Key.Slash;
+		#else
 		[SerializeField] private KeyCode activationKeyCode = KeyCode.Slash;
+		#endif
 
 		[Header("Visuals")]
 		[SerializeField] private Color defaultColor = Color.white;
@@ -68,7 +76,11 @@ namespace Hibzz.Console
 
 		private void Update()
 		{
-			if(Input.GetKeyDown(activationKeyCode))
+			#if ENABLE_INPUT_SYSTEM
+			if(Keyboard.current[activationKey].wasPressedThisFrame)			
+			#else
+			if (Input.GetKeyDown(activationKeyCode))
+			#endif
 			{
 				ActivateConsole();
 			}
@@ -76,8 +88,13 @@ namespace Hibzz.Console
 			// If hovered and scrolling
 			if(IsHoveredOverConsole()) 
 			{
-				// print scroll
+				// get the mouse scroll delta from the mouse
+				#if ENABLE_INPUT_SYSTEM
+				Vector2 scrollvec = Mouse.current.scroll.ReadValue();
+				#else
 				Vector2 scrollvec = Input.mouseScrollDelta;
+				#endif
+				
 				if(scrollvec.y > 0) 
 				{
 					DeveloperConsole.ScrollUp();
@@ -114,7 +131,12 @@ namespace Hibzz.Console
 			if(!inputField.isFocused)
 			{
 				uiCanvas.SetActive(true);
+
+				#if ENABLE_INPUT_SYSTEM
+				#else
 				inputField.text += ((char)activationKeyCode);
+				#endif
+
 				inputField.ActivateInputField();
 				inputField.caretPosition = inputField.text.Length;
 			}
@@ -127,7 +149,11 @@ namespace Hibzz.Console
 		public void ProcessCommand(string input)
 		{
 			// if return wasn't pressed that frame, then don't process the command
+#if ENABLE_INPUT_SYSTEM
+			if(!Keyboard.current[Key.Enter].wasPressedThisFrame) { return; }
+#else
 			if(!Input.GetKeyDown(KeyCode.Return)) { return; }
+#endif
 
 			DeveloperConsole.ProcessCommand(input);
 			inputField.text = string.Empty;
@@ -187,8 +213,13 @@ namespace Hibzz.Console
 		private bool IsHoveredOverConsole()
 		{
 			PointerEventData pointerEventData = new PointerEventData(EventSystem.current); // can be cached
-			pointerEventData.position = Input.mousePosition;
 
+#if ENABLE_INPUT_SYSTEM
+			pointerEventData.position = Mouse.current.position.ReadValue();
+#else
+			pointerEventData.position = Input.mousePosition;
+#endif
+			
 			List<RaycastResult> raycastResults = new List<RaycastResult>(); // can be cached as well
 			EventSystem.current.RaycastAll(pointerEventData, raycastResults);
 
@@ -218,7 +249,7 @@ namespace Hibzz.Console
 			logUI.color = defaultColor;
 		}
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
 		/// <summary>
 		/// [Editor only function] Scans for new commands
@@ -245,10 +276,10 @@ namespace Hibzz.Console
 			}
 		}
 
-		#endif
+#endif
 	}
 
-	#if UNITY_EDITOR
+#if UNITY_EDITOR
 
 	[CustomEditor(typeof(DeveloperConsoleUI))]
 	public class DeveloperConsoleInspector : Editor
@@ -268,5 +299,5 @@ namespace Hibzz.Console
 		}
 	}
 
-	#endif
+#endif
 }
