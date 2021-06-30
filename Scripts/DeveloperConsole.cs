@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace Hibzz.Console
@@ -16,7 +17,9 @@ namespace Hibzz.Console
 		private readonly IEnumerable<ConsoleCommand> commands;  // registered list of commands
 
 		private CyclicQueue<Log> logs;							// data structure used to store the logs
-		private int scrollPos = 0;								// variable that keeps track of current scroll position
+		private int scrollPos = 0;                              // variable that keeps track of current scroll position
+
+		private bool AdminAccess = false;					// does the console have admin access at the moment?
 
 		/// <summary>
 		/// constructor that takes in a prefix and list of commands
@@ -71,6 +74,9 @@ namespace Hibzz.Console
 				if(!commandInput.Equals(command.CommandWord, StringComparison.OrdinalIgnoreCase))
 				{ continue; }
 
+				// if the command requires admin acceess and if the console currently has no admin access, then don't execute the command
+				if(command.RequiresAdminAccess && !AdminAccess) { return; }
+
 				if(!command.Process(args))
 				{
 					// TODO: Print "invalid args"
@@ -103,10 +109,11 @@ namespace Hibzz.Console
 		}
 
 		/// <summary>
-		/// Add a log with the given message
+		/// Add a log with the given message and color
 		/// </summary>
 		/// <param name="message"> The message to print </param>
-		public void AddLog(string message)
+		/// <param name="color"> The color of the message </param>
+		public void AddLog(string message, Color color)
 		{
 			// if not all the way to the bottom, 
 			// then increment the scroll position so that the user sees the latest log
@@ -115,7 +122,10 @@ namespace Hibzz.Console
 				++scrollPos;
 			}
 
-			logs.Enqueue(new Log(message));
+			// detect the links
+			message = DetectLinks(message);
+
+			logs.Enqueue(new Log(message, color));
 		}
 
 		/// <summary>
@@ -146,6 +156,42 @@ namespace Hibzz.Console
 		{
 			++scrollPos;
 			scrollPos = Mathf.Clamp(scrollPos, 0, logs.Count);
+		}
+
+		/// <summary>
+		/// Detects strings and replace them with link tags
+		/// </summary>
+		/// <param name="message"> The message to look for links in </param>
+		/// <returns> A string where the urls are replaced with links </returns>
+		private string DetectLinks(string message)
+		{
+			Regex regex = new Regex("https://([\\w+?\\.\\w+])+([a-zA-Z0-9\\~\\!\\@\\#\\$\\%\\^\\&amp;\\*\\(\\)_\\-\\=\\+\\\\\\/\\?\\.\\:\\;\\'\\,]*)?", RegexOptions.IgnoreCase);
+			MatchCollection matches = regex.Matches(message);
+
+			foreach (Match match in matches)
+			{
+				message = message.Replace(match.Value, "<link=\"" + match.Value + "\">" + match.Value + "</link>");
+			}
+
+			return message;
+		}
+
+		/// <summary>
+		/// Gives console admin access
+		/// </summary>
+		public void RequestAdminAccess()
+		{
+			AdminAccess = true;
+			Debug.Log("Granted admin access to the console");
+		}
+
+		/// <summary>
+		/// Revokes console admin access
+		/// </summary>
+		public void RewokeAdminAccesss()
+		{
+			AdminAccess = false;
+			Debug.Log("Revoked admin acceess to the console");
 		}
 	}
 }

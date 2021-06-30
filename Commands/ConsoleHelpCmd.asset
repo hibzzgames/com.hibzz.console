@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcb07d569c9537847a1a5c4157a6dda0, type: 3}
   m_Name: ConsoleHelpCmd
   m_EditorClassIdentifier: 
-  CommandWord: help.console
+  CommandWord: console.help
+  RequiresAdminAccess: 1
+  IncludeInScan: 1

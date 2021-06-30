@@ -7,14 +7,18 @@ using TMPro;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEditor;
+
+#if ENABLE_INPUT_SYSTEM
+	using UnityEngine.InputSystem;
+#endif
 
 namespace Hibzz.Console
 {
-
 	public class DeveloperConsoleUI : MonoBehaviour
 	{
 		[SerializeField] private string prefix = string.Empty;
-		[SerializeField] private ConsoleCommand[] commands = new ConsoleCommand[0];
+		[SerializeField] private List<ConsoleCommand> commands = new List<ConsoleCommand>();
 
 		[Header("UI")]
 		[SerializeField] private GameObject uiCanvas = null;
@@ -23,13 +27,25 @@ namespace Hibzz.Console
 		[SerializeField] private GameObject UIPanel = null;
 
 		[Header("Input")]
+		#if ENABLE_INPUT_SYSTEM
+		[SerializeField] private Key activationKey = Key.Slash;
+		#else
 		[SerializeField] private KeyCode activationKeyCode = KeyCode.Slash;
+		#endif
+
+		[Header("Visuals")]
+		[SerializeField] private Color defaultColor = Color.white;
+		public Color DefaultColor
+		{
+			get { return defaultColor; }
+			set { defaultColor = value; UpdateDefaultColor(); }
+		}
 
 		// Singleton UI instancce
-		private static DeveloperConsoleUI instance;
+		public static DeveloperConsoleUI instance;
 
 		private DeveloperConsole developerConsole;
-		private DeveloperConsole DeveloperConsole
+		public DeveloperConsole DeveloperConsole
 		{
 			get
 			{
@@ -60,7 +76,11 @@ namespace Hibzz.Console
 
 		private void Update()
 		{
-			if(Input.GetKeyDown(activationKeyCode))
+			#if ENABLE_INPUT_SYSTEM
+			if(Keyboard.current[activationKey].wasPressedThisFrame)			
+			#else
+			if (Input.GetKeyDown(activationKeyCode))
+			#endif
 			{
 				ActivateConsole();
 			}
@@ -68,8 +88,13 @@ namespace Hibzz.Console
 			// If hovered and scrolling
 			if(IsHoveredOverConsole()) 
 			{
-				// print scroll
+				// get the mouse scroll delta from the mouse
+				#if ENABLE_INPUT_SYSTEM
+				Vector2 scrollvec = Mouse.current.scroll.ReadValue();
+				#else
 				Vector2 scrollvec = Input.mouseScrollDelta;
+				#endif
+				
 				if(scrollvec.y > 0) 
 				{
 					DeveloperConsole.ScrollUp();
@@ -82,6 +107,11 @@ namespace Hibzz.Console
 					UpdateLogText();
 				}
 			}
+		}
+
+		private void OnValidate()
+		{
+			UpdateDefaultColor();
 		}
 
 		/// <summary>
@@ -101,7 +131,7 @@ namespace Hibzz.Console
 			if(!inputField.isFocused)
 			{
 				uiCanvas.SetActive(true);
-				inputField.text += ((char)activationKeyCode);
+				inputField.text += prefix;
 				inputField.ActivateInputField();
 				inputField.caretPosition = inputField.text.Length;
 			}
@@ -114,7 +144,11 @@ namespace Hibzz.Console
 		public void ProcessCommand(string input)
 		{
 			// if return wasn't pressed that frame, then don't process the command
+#if ENABLE_INPUT_SYSTEM
+			if(!Keyboard.current[Key.Enter].wasPressedThisFrame) { return; }
+#else
 			if(!Input.GetKeyDown(KeyCode.Return)) { return; }
+#endif
 
 			DeveloperConsole.ProcessCommand(input);
 			inputField.text = string.Empty;
@@ -124,9 +158,10 @@ namespace Hibzz.Console
 		/// Add message as a log to the logger
 		/// </summary>
 		/// <param name="message"> The message to add </param>
-		private void AddLog(string message)
+		/// <param name="color"> The color of the message </param>
+		private void AddLog(string message, Color color)
 		{
-			DeveloperConsole.AddLog(message);
+			DeveloperConsole.AddLog(message, color);
 			UpdateLogText();
 		}
 
@@ -136,7 +171,17 @@ namespace Hibzz.Console
 		/// <param name="message"> the message to add </param>
 		public static void Log(string message)
 		{
-			instance.AddLog(message);
+			instance.AddLog(message, instance.DefaultColor);
+		}
+
+		/// <summary>
+		/// Static function that adds a log to the singleton instance
+		/// </summary>
+		/// <param name="message"> The message to add </param>
+		/// <param name="color"> The color of the message </param>
+		public static void Log(string message, Color color)
+		{
+			instance.AddLog(message, color);
 		}
 
 		/// <summary>
@@ -163,8 +208,13 @@ namespace Hibzz.Console
 		private bool IsHoveredOverConsole()
 		{
 			PointerEventData pointerEventData = new PointerEventData(EventSystem.current); // can be cached
-			pointerEventData.position = Input.mousePosition;
 
+#if ENABLE_INPUT_SYSTEM
+			pointerEventData.position = Mouse.current.position.ReadValue();
+#else
+			pointerEventData.position = Input.mousePosition;
+#endif
+			
 			List<RaycastResult> raycastResults = new List<RaycastResult>(); // can be cached as well
 			EventSystem.current.RaycastAll(pointerEventData, raycastResults);
 
@@ -185,5 +235,64 @@ namespace Hibzz.Console
 		{
 			logUI.text = developerConsole.GetLogs();
 		}
+
+		/// <summary>
+		/// Updates the default color of other elements assosciated with it
+		/// </summary>
+		private void UpdateDefaultColor()
+		{
+			logUI.color = defaultColor;
+		}
+
+#if UNITY_EDITOR
+
+		/// <summary>
+		/// [Editor only function] Scans for new commands
+		/// </summary>
+		public void Scan()
+		{
+			// clear the list of existing commands
+			commands.Clear();
+
+			// use tags to scan the asset database
+			string[] guids = AssetDatabase.FindAssets("t:" + typeof(ConsoleCommand).Name);
+			foreach(string guid in guids)
+			{
+				// get the command from the guid
+				string path = AssetDatabase.GUIDToAssetPath(guid);
+				ConsoleCommand command = AssetDatabase.LoadAssetAtPath<ConsoleCommand>(path);
+
+				// if the command is marked to include in the scan,
+				// then we add it to the list of commands
+				if (command.IncludeInScan)
+				{
+					commands.Add(command);
+				}
+			}
+		}
+
+#endif
 	}
+
+#if UNITY_EDITOR
+
+	[CustomEditor(typeof(DeveloperConsoleUI))]
+	public class DeveloperConsoleInspector : Editor
+	{
+		public override void OnInspectorGUI()
+		{
+			// Draw the default inspector and some spacing below it
+			DrawDefaultInspector();
+			GUILayout.Space(10);
+
+			// Draw a button that scans for new commands
+			DeveloperConsoleUI console = target as DeveloperConsoleUI;
+			if(GUILayout.Button("Scan for Commands", GUILayout.Height(25)))
+			{
+				console.Scan();
+			}
+		}
+	}
+
+#endif
 }

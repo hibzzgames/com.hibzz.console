@@ -11,6 +11,12 @@ namespace Hibzz.Console
 	[CreateAssetMenu(fileName = "ClearCmd", menuName = "Console/Built-in Commands/Clear")]
 	public class Clear : ConsoleCommand
 	{
+		// used to set default values
+		public Clear() 
+		{
+			CommandWord = "clear";
+		}
+
 		public override bool Process(string[] args)
 		{
 			DeveloperConsoleUI.Clear();

@@ -11,6 +11,12 @@ namespace Hibzz.Console
 	[CreateAssetMenu(fileName = "VersionCmd", menuName = "Console/Built-in Commands/Version")]
 	public class Version : ConsoleCommand
 	{
+		// used to set default values
+		public Version() 
+		{
+			CommandWord = "version";
+		}
+
 		public override bool Process(string[] args)
 		{
 			DeveloperConsoleUI.Log("Version: " + Application.version);

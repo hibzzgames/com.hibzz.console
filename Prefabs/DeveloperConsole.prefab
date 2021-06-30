@@ -180,14 +180,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefix: /
   commands:
-  - {fileID: 11400000, guid: 4d8fc261eb820ce49886d68aa0614237, type: 2}
+  - {fileID: 11400000, guid: 59f2102d7131cfb44a22b8e4464783a2, type: 2}
   - {fileID: 11400000, guid: be8a611cc43be5744b79767982cea0ac, type: 2}
   - {fileID: 11400000, guid: 20ec1ca2bbd44e94faca660ddbecfd80, type: 2}
+  - {fileID: 11400000, guid: 4d8fc261eb820ce49886d68aa0614237, type: 2}
   uiCanvas: {fileID: 855559481631051708}
   inputField: {fileID: 855559482485143244}
   logUI: {fileID: 855559482330210214}
   UIPanel: {fileID: 855559481754126820}
   activationKeyCode: 47
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &855559481445711384
 GameObject:
   m_ObjectHideFlags: 0
@@ -598,6 +600,7 @@ GameObject:
   - component: {fileID: 855559482330210215}
   - component: {fileID: 855559482330210209}
   - component: {fileID: 855559482330210214}
+  - component: {fileID: 7293943294563688969}
   m_Layer: 0
   m_Name: LogTexts
   m_TagString: Untagged
@@ -672,7 +675,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4290361785
-  m_fontColor: {r: 0.7254902, g: 0.7254902, b: 0.7254902, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -731,6 +734,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7293943294563688969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 855559482330210212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1931b4d0e739dd4581f9dc652b20ad2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &855559482485143282
 GameObject:
   m_ObjectHideFlags: 0
