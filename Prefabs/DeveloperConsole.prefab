@@ -180,8 +180,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefix: /
   commands:
+  - {fileID: 11400000, guid: 59f2102d7131cfb44a22b8e4464783a2, type: 2}
   - {fileID: 11400000, guid: be8a611cc43be5744b79767982cea0ac, type: 2}
-  - {fileID: 11400000, guid: 20ec1ca2bbd44e94faca660ddbecfd80, type: 2}
   - {fileID: 11400000, guid: 20ec1ca2bbd44e94faca660ddbecfd80, type: 2}
   uiCanvas: {fileID: 855559481631051708}
   inputField: {fileID: 855559482485143244}

@@ -37,7 +37,7 @@ namespace Hibzz.Console
 		public static DeveloperConsoleUI instance;
 
 		private DeveloperConsole developerConsole;
-		private DeveloperConsole DeveloperConsole
+		public DeveloperConsole DeveloperConsole
 		{
 			get
 			{

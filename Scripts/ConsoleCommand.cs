@@ -11,6 +11,9 @@ namespace Hibzz.Console
 	{
 		[Tooltip("The keyword to execute this command")]
 		[SerializeField] public string CommandWord = string.Empty;
+
+		[Tooltip("Does the command requires admin access")]
+		[SerializeField] public bool RequiresAdminAccess = false;
 		
 		[Tooltip("This property provides the option to exclude a command from scan")]
 		[SerializeField] public bool IncludeInScan = true;

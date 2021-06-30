@@ -17,7 +17,9 @@ namespace Hibzz.Console
 		private readonly IEnumerable<ConsoleCommand> commands;  // registered list of commands
 
 		private CyclicQueue<Log> logs;							// data structure used to store the logs
-		private int scrollPos = 0;								// variable that keeps track of current scroll position
+		private int scrollPos = 0;                              // variable that keeps track of current scroll position
+
+		private bool AdminAccess = false;					// does the console have admin access at the moment?
 
 		/// <summary>
 		/// constructor that takes in a prefix and list of commands
@@ -71,6 +73,9 @@ namespace Hibzz.Console
 				// if it doesn't match the command string, then check for the next
 				if(!commandInput.Equals(command.CommandWord, StringComparison.OrdinalIgnoreCase))
 				{ continue; }
+
+				// if the command requires admin acceess and if the console currently has no admin access, then don't execute the command
+				if(command.RequiresAdminAccess && !AdminAccess) { return; }
 
 				if(!command.Process(args))
 				{
@@ -169,6 +174,24 @@ namespace Hibzz.Console
 			}
 
 			return message;
+		}
+
+		/// <summary>
+		/// Gives console admin access
+		/// </summary>
+		public void RequestAdminAccess()
+		{
+			AdminAccess = true;
+			Debug.Log("Granted admin access to the console");
+		}
+
+		/// <summary>
+		/// Revokes console admin access
+		/// </summary>
+		public void RewokeAdminAccesss()
+		{
+			AdminAccess = false;
+			Debug.Log("Revoked admin acceess to the console");
 		}
 	}
 }
