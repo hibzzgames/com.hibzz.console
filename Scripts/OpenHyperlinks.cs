@@ -7,6 +7,10 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
 
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
+
 namespace Hibzz.Console
 {
 	[RequireComponent(typeof(TMP_Text))]
@@ -22,7 +26,11 @@ namespace Hibzz.Console
 		public void OnPointerClick(PointerEventData eventData)
 		{
 			// This enables ctrl + click to open the link
+			#if ENABLE_INPUT_SYSTEM
+			if(!Keyboard.current[Key.LeftCtrl].isPressed) { return; }
+			#else
 			if(!Input.GetKey(KeyCode.LeftControl)) { return; }
+			#endif
 
 			// find if the text at the given position has any links in it
 			int linkIndex = TMP_TextUtilities.FindIntersectingLink(text, Input.mousePosition, null);
