@@ -1,25 +1,15 @@
-/* Script:		CommandTooltip.cs
+/* Script:		TooltipDrawer.cs
  * Author:		Hibnu Hishath (sliptrixx)
  * Date:		17 June, 2021
- * Description: Editor and custom attribute script for adding tooltips for the console commands */
+ * Description: Custom editor for the ConsoleCommands that pairs with the 
+ *				Tooltip attribute  */
 
-using System;
 using UnityEngine;
 using UnityEditor;
 
 namespace Hibzz.Console
 {
-	[AttributeUsage(AttributeTargets.Class)]
-	public class CommandTooltip : PropertyAttribute
-	{
-		public readonly string description;
-		public CommandTooltip(string description)
-		{
-			this.description = description;
-		}
-	}
-
-	[CustomEditor(typeof(ScriptableObject), editorForChildClasses: true)]
+	[CustomEditor(typeof(ConsoleCommand), editorForChildClasses: true)]
 	public class TooltipDrawer : Editor
 	{
 		string tooltip;
@@ -39,7 +29,7 @@ namespace Hibzz.Console
 		public override void OnInspectorGUI()
 		{
 			EditorGUILayout.Space();
-			EditorGUILayout.LabelField(tooltip) ;
+			EditorGUILayout.LabelField(tooltip);
 			EditorGUILayout.Space();
 			base.OnInspectorGUI();
 		}
