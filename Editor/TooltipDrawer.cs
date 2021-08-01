@@ -1,10 +1,9 @@
 /* Script:		TooltipDrawer.cs
  * Author:		Hibnu Hishath (sliptrixx)
- * Date:		17 June, 2021
+ * Date:		01 August, 2021
  * Description: Custom editor for the ConsoleCommands that pairs with the 
  *				Tooltip attribute  */
 
-using UnityEngine;
 using UnityEditor;
 
 namespace Hibzz.Console
