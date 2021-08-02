@@ -188,7 +188,7 @@ namespace Hibzz.Console
 		/// <summary>
 		/// Revokes console admin access
 		/// </summary>
-		public void RewokeAdminAccesss()
+		public void RevokeAdminAccesss()
 		{
 			AdminAccess = false;
 			Debug.Log("Revoked admin acceess to the console");

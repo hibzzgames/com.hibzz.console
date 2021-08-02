@@ -33,7 +33,7 @@ namespace Hibzz.Console
 			// hopefully no one set's the password as revoke
 			else if(args[0] == "revoke")
 			{
-				DeveloperConsoleUI.instance.DeveloperConsole.RewokeAdminAccesss();
+				DeveloperConsoleUI.instance.DeveloperConsole.RevokeAdminAccesss();
 				DeveloperConsoleUI.Log("Admin access revoked", Color.red);
 				return true;
 			}
