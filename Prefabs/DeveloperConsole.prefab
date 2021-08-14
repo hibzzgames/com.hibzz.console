@@ -180,15 +180,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefix: /
   commands:
-  - {fileID: 11400000, guid: 59f2102d7131cfb44a22b8e4464783a2, type: 2}
   - {fileID: 11400000, guid: be8a611cc43be5744b79767982cea0ac, type: 2}
-  - {fileID: 11400000, guid: 20ec1ca2bbd44e94faca660ddbecfd80, type: 2}
-  - {fileID: 11400000, guid: 4d8fc261eb820ce49886d68aa0614237, type: 2}
   uiCanvas: {fileID: 855559481631051708}
   inputField: {fileID: 855559482485143244}
   logUI: {fileID: 855559482330210214}
   UIPanel: {fileID: 855559481754126820}
-  activationKeyCode: 47
+  activationKey: 9
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &855559481445711384
 GameObject:
@@ -674,7 +671,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4290361785
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
