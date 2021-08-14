@@ -85,8 +85,12 @@ namespace Hibzz.Console
 				ActivateConsole();
 			}
 
+			// Update console info
+			ConsoleInfo.IsHovered = IsHoveredOverConsole();
+			ConsoleInfo.IsTextboxFocused = inputField.isFocused;
+
 			// If hovered and scrolling
-			if(IsHoveredOverConsole()) 
+			if (ConsoleInfo.IsHovered) 
 			{
 				// get the mouse scroll delta from the mouse
 				#if ENABLE_INPUT_SYSTEM
