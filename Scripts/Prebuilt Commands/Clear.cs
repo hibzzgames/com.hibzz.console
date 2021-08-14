@@ -19,7 +19,7 @@ namespace Hibzz.Console
 
 		public override bool Process(string[] args)
 		{
-			DeveloperConsoleUI.Clear();
+			Console.Clear();
 			return true;
 		}
 	}

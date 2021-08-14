@@ -53,7 +53,7 @@ namespace Hibzz.Console
 			// and break out
 			if(!input.StartsWith(prefix)) 
 			{
-				DeveloperConsoleUI.Log(input);
+				Console.Log(input);
 				return; 
 			}
 

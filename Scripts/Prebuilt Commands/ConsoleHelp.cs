@@ -19,7 +19,7 @@ namespace Hibzz.Console
 
 		public override bool Process(string[] args)
 		{
-			DeveloperConsoleUI.Log("https://github.com/Hibzz-Games/unity.console");
+			Console.Log("https://github.com/Hibzz-Games/unity.console");
 			return true;
 		}
 	}
