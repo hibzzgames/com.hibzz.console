@@ -25,16 +25,16 @@ namespace Hibzz.Console
 			// if the incoming argument matches the set password, then set it
 			if(password == args[0])
 			{
-				DeveloperConsoleUI.instance.DeveloperConsole.RequestAdminAccess();
-				DeveloperConsoleUI.Log("Admin access granted", Color.green);
+				Console.RequestAdminAccess();
+				Console.Log("Admin access granted", Color.green);
 				return true;
 			}
 			// or if the incoming argument matches the keyword "revoke", it revokes console admin access
 			// hopefully no one set's the password as revoke
 			else if(args[0] == "revoke")
 			{
-				DeveloperConsoleUI.instance.DeveloperConsole.RevokeAdminAccesss();
-				DeveloperConsoleUI.Log("Admin access revoked", Color.red);
+				Console.RevokeAdminAccess();
+				Console.Log("Admin access revoked", Color.red);
 				return true;
 			}
 

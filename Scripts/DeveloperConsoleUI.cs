@@ -42,7 +42,7 @@ namespace Hibzz.Console
 		}
 
 		// Singleton UI instancce
-		public static DeveloperConsoleUI instance;
+		internal static DeveloperConsoleUI instance;
 
 		private DeveloperConsole developerConsole;
 		public DeveloperConsole DeveloperConsole
@@ -86,11 +86,11 @@ namespace Hibzz.Console
 			}
 
 			// Update console info
-			ConsoleInfo.IsHovered = IsHoveredOverConsole();
-			ConsoleInfo.IsTextboxFocused = inputField.isFocused;
+			Console.IsHovered = IsHoveredOverConsole();
+			Console.IsTextboxFocused = inputField.isFocused;
 
 			// If hovered and scrolling
-			if (ConsoleInfo.IsHovered) 
+			if (Console.IsHovered) 
 			{
 				// get the mouse scroll delta from the mouse
 				#if ENABLE_INPUT_SYSTEM
@@ -163,46 +163,19 @@ namespace Hibzz.Console
 		/// </summary>
 		/// <param name="message"> The message to add </param>
 		/// <param name="color"> The color of the message </param>
-		private void AddLog(string message, Color color)
+		internal void AddLog(string message, Color color)
 		{
 			DeveloperConsole.AddLog(message, color);
 			UpdateLogText();
 		}
 
 		/// <summary>
-		/// Static class that adds a log to the singleton instance
-		/// </summary>
-		/// <param name="message"> the message to add </param>
-		public static void Log(string message)
-		{
-			instance.AddLog(message, instance.DefaultColor);
-		}
-
-		/// <summary>
-		/// Static function that adds a log to the singleton instance
-		/// </summary>
-		/// <param name="message"> The message to add </param>
-		/// <param name="color"> The color of the message </param>
-		public static void Log(string message, Color color)
-		{
-			instance.AddLog(message, color);
-		}
-
-		/// <summary>
 		/// clears the logs in the developer console
 		/// </summary>
-		private void ClearLogs()
+		internal void ClearLogs()
 		{
 			DeveloperConsole.Clear();
 			UpdateLogText();
-		}
-
-		/// <summary>
-		/// Static function that clears the singleton log
-		/// </summary>
-		public static void Clear()
-		{
-			instance.ClearLogs();
 		}
 
 		/// <summary>
