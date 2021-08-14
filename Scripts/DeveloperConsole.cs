@@ -7,7 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEditor;
+
+#if UNITY_EDITOR
 using UnityEngine;
+#endif
 
 namespace Hibzz.Console
 {
@@ -31,7 +35,12 @@ namespace Hibzz.Console
 			this.prefix = prefix;
 			this.commands = commands;
 
-			this.logs = new CyclicQueue<Log>(100);
+			// this ensures that admin access is saved across a unity session
+			#if UNITY_EDITOR
+			AdminAccess = SessionState.GetBool("ConsoleAdminAccess", false);
+			#endif
+
+			logs = new CyclicQueue<Log>(100);
 		}
 
 		/// <summary>
@@ -182,6 +191,11 @@ namespace Hibzz.Console
 		public void RequestAdminAccess()
 		{
 			AdminAccess = true;
+
+			#if UNITY_EDITOR
+			SessionState.SetBool("ConsoleAdminAccess", AdminAccess);
+			#endif
+
 			Debug.Log("Granted admin access to the console");
 		}
 
@@ -191,6 +205,11 @@ namespace Hibzz.Console
 		public void RevokeAdminAccesss()
 		{
 			AdminAccess = false;
+
+			#if UNITY_EDITOR
+				SessionState.EraseBool("ConsoleAdminAccess");
+			#endif
+
 			Debug.Log("Revoked admin acceess to the console");
 		}
 	}
