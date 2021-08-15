@@ -19,6 +19,22 @@ namespace Hibzz.Console
 
 		public override bool Process(string[] args)
 		{
+			// if there are any arguments passed, check for matching subcommands
+			if(args.Length > 0)
+			{
+				// -o clears the cache dictionary
+				if(args[0] == "-o")
+				{
+					Console.CacheDictionary.Clear();
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			// clear the console logs
 			Console.Clear();
 			return true;
 		}
