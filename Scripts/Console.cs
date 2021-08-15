@@ -24,6 +24,11 @@ namespace Hibzz.Console
 		public static bool IsTextboxFocused = false;
 
 		/// <summary>
+		/// A dictionary to store cache results and intermediary values that can be used in the next process
+		/// </summary>
+		public static Dictionary<string, Object> CacheDictionary = new Dictionary<string, Object>();
+
+		/// <summary>
 		/// Static class that adds a log to the singleton instance
 		/// </summary>
 		/// <param name="message"> the message to add </param>
