@@ -22,8 +22,8 @@ namespace Hibzz.Console
 			// if there are any arguments passed, check for matching subcommands
 			if(args.Length > 0)
 			{
-				// -o clears the cache dictionary
-				if(args[0] == "-o")
+				// -cd clears the cache dictionary
+				if(args[0] == "-cd")
 				{
 					Console.CacheDictionary.Clear();
 					return true;
