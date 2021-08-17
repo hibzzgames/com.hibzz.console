@@ -8,9 +8,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEditor;
+using System.Linq;
 
 #if ENABLE_INPUT_SYSTEM
-	using UnityEngine.InputSystem;
+using UnityEngine.InputSystem;
 #endif
 
 namespace Hibzz.Console
@@ -57,6 +58,21 @@ namespace Hibzz.Console
 				return developerConsole;
 			}
 		}
+
+		/// <summary>
+		/// A cyclic queue used to store previous commands
+		/// </summary>
+		private CyclicQueue<string> PreviousCommands = new CyclicQueue<string>(20);
+
+		/// <summary>
+		/// A marker variable used to store the current command that the user is cycling through
+		/// </summary>
+		private int PreviousCommandMarker = 0;
+
+		/// <summary>
+		/// Text that was written, but user decided to cycle through previous commands
+		/// </summary>
+		private string currentTextBeingEditted = string.Empty;
 
 		private void Awake()
 		{
@@ -111,6 +127,60 @@ namespace Hibzz.Console
 					UpdateLogText();
 				}
 			}
+
+			// code cycle through previous commands (if they exist)
+			if (Console.IsTextboxFocused)
+			{
+				int arrowkey = 0; // variable to store whether up or down arrow key is pressed
+
+				#if ENABLE_INPUT_SYSTEM
+				if(Keyboard.current[Key.UpArrow].wasPressedThisFrame)
+				{
+					arrowkey = 1;
+				}
+				else if(Keyboard.current[Key.DownArrow].wasPressedThisFrame)
+				{
+					arrowkey = -1;
+				}
+#else
+				if (Input.GetKeyDown(KeyCode.UpArrow))
+				{
+					arrowkey = 1;
+				}
+				else if (Input.GetKeyDown(KeyCode.DownArrow))
+				{
+					arrowkey = -1;
+				}
+#endif
+
+				// if up or down arrow was pressed, process accordingly
+				if (arrowkey == 1 && PreviousCommandMarker < PreviousCommands.Count)
+				{
+					if (PreviousCommandMarker == 0)
+					{
+						currentTextBeingEditted = inputField.text;
+					}
+
+					PreviousCommandMarker += 1;
+					inputField.text = PreviousCommands.ElementAt(PreviousCommands.Count - PreviousCommandMarker);
+					inputField.caretPosition = inputField.text.Length;
+				}
+				else if (arrowkey == -1 && PreviousCommandMarker > 0)
+				{
+					PreviousCommandMarker -= 1;
+
+					if (PreviousCommandMarker == 0)
+					{
+						inputField.text = currentTextBeingEditted;
+						inputField.caretPosition = inputField.text.Length;
+					}
+					else
+					{
+						inputField.text = PreviousCommands.ElementAt(PreviousCommands.Count - PreviousCommandMarker);
+						inputField.caretPosition = inputField.text.Length;
+					}
+				}
+			}
 		}
 
 		private void OnValidate()
@@ -153,7 +223,11 @@ namespace Hibzz.Console
 #else
 			if(!Input.GetKeyDown(KeyCode.Return)) { return; }
 #endif
+			// add the input to the previous command queue
+			PreviousCommands.Enqueue(input);
+			PreviousCommandMarker = 0;
 
+			// process the command and clear the text field
 			DeveloperConsole.ProcessCommand(input);
 			inputField.text = string.Empty;
 		}
