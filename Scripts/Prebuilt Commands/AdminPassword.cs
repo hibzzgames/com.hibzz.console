@@ -26,15 +26,15 @@ namespace Hibzz.Console
 			if(password == args[0])
 			{
 				Console.RequestAdminAccess();
-				Console.Log("Admin access granted", Color.green);
+				Console.LogSuccess("Admin access granted");
 				return true;
 			}
 			// or if the incoming argument matches the keyword "revoke", it revokes console admin access
 			// hopefully no one set's the password as revoke
-			else if(args[0] == "revoke")
+			else if(args[0] == "-r")
 			{
 				Console.RevokeAdminAccess();
-				Console.Log("Admin access revoked", Color.red);
+				Console.LogInfo("Admin access removed");
 				return true;
 			}
 

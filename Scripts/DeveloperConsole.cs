@@ -195,8 +195,6 @@ namespace Hibzz.Console
 			#if UNITY_EDITOR
 			SessionState.SetBool("ConsoleAdminAccess", AdminAccess);
 			#endif
-
-			Debug.Log("Granted admin access to the console");
 		}
 
 		/// <summary>
@@ -209,8 +207,6 @@ namespace Hibzz.Console
 			#if UNITY_EDITOR
 				SessionState.EraseBool("ConsoleAdminAccess");
 			#endif
-
-			Debug.Log("Revoked admin acceess to the console");
 		}
 	}
 }

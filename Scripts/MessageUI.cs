@@ -19,11 +19,6 @@ namespace Hibzz.Console
 		/// </summary>
 		[SerializeField] private Image backgroundPanel;
 
-		/// <summary>
-		/// The icon representing the type of message
-		/// </summary>
-		[SerializeField] private TMP_Text messageIcon;
-
 		[Header("Message Colors")]
 		[SerializeField] private Color ErrorColor;
 
@@ -32,6 +27,11 @@ namespace Hibzz.Console
 		[SerializeField] private Color InfoColor;
 
 		[SerializeField] private Color SuccessColor;
+
+		private void Start()
+		{
+			gameObject.SetActive(false);
+		}
 
 		/// <summary>
 		/// Closes the messages
@@ -58,22 +58,18 @@ namespace Hibzz.Console
 
 			if (type == Type.Error)
 			{
-				messageIcon.text = char.ConvertFromUtf32(0x26d4);
 				backgroundPanel.color = ErrorColor;
 			}
 			else if (type == Type.Warning)
 			{
-				messageIcon.text = char.ConvertFromUtf32(0x26a0);
 				backgroundPanel.color = WarningColor;
 			}
 			else if(type == Type.Info)
 			{
-				messageIcon.text = char.ConvertFromUtf32(0x1f4ac);
 				backgroundPanel.color = InfoColor;
 			}
 			else if(type == Type.Success)
 			{
-				messageIcon.text = char.ConvertFromUtf32(0x2714);
 				backgroundPanel.color = SuccessColor;
 			}
 
