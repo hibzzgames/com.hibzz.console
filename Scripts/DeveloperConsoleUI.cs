@@ -26,6 +26,7 @@ namespace Hibzz.Console
 		[SerializeField] private TMP_InputField inputField = null;
 		[SerializeField] private TMP_Text logUI = null;
 		[SerializeField] private GameObject UIPanel = null;
+		[SerializeField] internal MessageUI messageUI = null; 
 
 		[Header("Input")]
 		#if ENABLE_INPUT_SYSTEM

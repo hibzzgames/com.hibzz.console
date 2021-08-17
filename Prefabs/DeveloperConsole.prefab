@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sample error message
+  m_text: Sample error message that's a bit longer...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 93af47df318387f479ef78ae4360354a, type: 2}
   m_sharedMaterial: {fileID: -8555926738457552311, guid: 93af47df318387f479ef78ae4360354a, type: 2}
@@ -319,6 +319,7 @@ MonoBehaviour:
   inputField: {fileID: 855559482485143244}
   logUI: {fileID: 855559482330210214}
   UIPanel: {fileID: 855559481754126820}
+  messageUI: {fileID: 6257931199677384147}
   activationKey: 9
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &855559481445711384
@@ -1125,14 +1126,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.995283, b: 0.995283, a: 0}
+  m_Color: {r: 0.8679245, g: 0.55268776, b: 0.55268776, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1182,10 +1183,22 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 6564996799547825758}
+  m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6257931199677384147}
+        m_TargetAssemblyTypeName: Hibzz.Console.MessageUI, hibzz.unity.console
+        m_MethodName: CloseMessageUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5285947038773816968
 GameObject:
   m_ObjectHideFlags: 0
@@ -1332,7 +1345,7 @@ GameObject:
   - component: {fileID: 6955380819111103770}
   - component: {fileID: 8749003338496926587}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1354,7 +1367,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 7.43, y: -0.77}
+  m_AnchoredPosition: {x: 7.5, y: 0}
   m_SizeDelta: {x: 15, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6955380819111103770
@@ -1412,8 +1425,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 5
-  m_fontSizeBase: 5
+  m_fontSize: 8
+  m_fontSizeBase: 8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1465,8 +1478,9 @@ GameObject:
   - component: {fileID: 8507799111657026508}
   - component: {fileID: 3196751464686803778}
   - component: {fileID: 7459516726415045855}
+  - component: {fileID: 6257931199677384147}
   m_Layer: 0
-  m_Name: Temp Message Panel
+  m_Name: Message Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1515,7 +1529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.745283, g: 0.24429978, b: 0.2214756, a: 1}
+  m_Color: {r: 0.74509805, g: 0.24313726, b: 0.21960784, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1532,3 +1546,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6257931199677384147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8889318637051797765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e2478e9d4cb79c4e865656c056537cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  message: {fileID: 2118027679371731954}
+  backgroundPanel: {fileID: 7459516726415045855}
+  messageIcon: {fileID: 8749003338496926587}
+  ErrorColor: {r: 0.74509805, g: 0.24313726, b: 0.21960784, a: 1}
+  WarningColor: {r: 0.74509805, g: 0.59607846, b: 0.21960784, a: 1}
+  InfoColor: {r: 0.21960784, g: 0.4117647, b: 0.74509805, a: 1}
+  SuccessColor: {r: 0.21960784, g: 0.74509805, b: 0.41960785, a: 1}

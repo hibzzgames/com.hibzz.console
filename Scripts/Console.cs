@@ -70,5 +70,40 @@ namespace Hibzz.Console
 		{
 			DeveloperConsoleUI.instance.DeveloperConsole.RevokeAdminAccesss();
 		}
+
+		/// <summary>
+		/// Display an error message
+		/// </summary>
+		/// <param name="message"> the message to display </param>
+		public static void LogError(string message)
+		{
+			DeveloperConsoleUI.instance.messageUI.SendMessage(message, MessageUI.Type.Error);
+		}
+
+		/// <summary>
+		/// Display a warning message
+		/// </summary>
+		/// <param name="message"> The message to display </param>
+		public static void LogWarning(string message)
+		{
+			DeveloperConsoleUI.instance.messageUI.SendMessage(message, MessageUI.Type.Warning);
+		}
+
+		/// <summary>
+		/// Display an "informational" message
+		/// </summary>
+		/// <param name="message"> The message to display </param>
+		public static void LogInfo(string message)
+		{
+			DeveloperConsoleUI.instance.messageUI.SendMessage(message, MessageUI.Type.Info);		}
+
+		/// <summary>
+		/// Display a success message
+		/// </summary>
+		/// <param name="message"> The message to display </param>
+		public static void LogSuccess(string message)
+		{
+			DeveloperConsoleUI.instance.messageUI.SendMessage(message, MessageUI.Type.Success);
+		}
 	}
 }
