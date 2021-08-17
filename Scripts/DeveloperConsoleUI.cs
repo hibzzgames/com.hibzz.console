@@ -156,26 +156,32 @@ namespace Hibzz.Console
 				// if up or down arrow was pressed, process accordingly
 				if (arrowkey == 1 && PreviousCommandMarker < PreviousCommands.Count)
 				{
+					// if the user is typing something new, we store it in a cache
 					if (PreviousCommandMarker == 0)
 					{
 						currentTextBeingEditted = inputField.text;
 					}
 
+					// retrieve text from previous command queue
 					PreviousCommandMarker += 1;
 					inputField.text = PreviousCommands.ElementAt(PreviousCommands.Count - PreviousCommandMarker);
 					inputField.caretPosition = inputField.text.Length;
 				}
 				else if (arrowkey == -1 && PreviousCommandMarker > 0)
 				{
+					// move command marker down
 					PreviousCommandMarker -= 1;
 
+					// if in pos 0, it means we have reached user command
 					if (PreviousCommandMarker == 0)
 					{
+						// read from cache and update text
 						inputField.text = currentTextBeingEditted;
 						inputField.caretPosition = inputField.text.Length;
 					}
 					else
 					{
+						// if not in 0 pos, then we read from the previous command queue
 						inputField.text = PreviousCommands.ElementAt(PreviousCommands.Count - PreviousCommandMarker);
 						inputField.caretPosition = inputField.text.Length;
 					}
