@@ -84,7 +84,11 @@ namespace Hibzz.Console
 				{ continue; }
 
 				// if the command requires admin acceess and if the console currently has no admin access, then don't execute the command
-				if(command.RequiresAdminAccess && !AdminAccess) { return; }
+				if(command.RequiresAdminAccess && !AdminAccess) 
+				{
+					Console.LogWarning("Command requires admin access");
+					return; 
+				}
 
 				if(!command.Process(args))
 				{
@@ -94,6 +98,7 @@ namespace Hibzz.Console
 			}
 
 			// TODO: Notify "Invalid command"
+			Console.LogWarning("Invalid Command");
 		}
 
 		/// <summary>
