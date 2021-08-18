@@ -95,6 +95,8 @@ namespace Hibzz.Console
 					// TODO: Print "invalid args"
 					return;
 				}
+
+				return;
 			}
 
 			// TODO: Notify "Invalid command"

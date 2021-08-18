@@ -24,7 +24,7 @@ namespace Hibzz.Console
 		[Header("UI")]
 		[SerializeField] private GameObject uiCanvas = null;
 		[SerializeField] private TMP_InputField inputField = null;
-		[SerializeField] private TMP_Text logUI = null;
+		[SerializeField] private TMP_InputField logUI = null;
 		[SerializeField] private GameObject UIPanel = null;
 		[SerializeField] internal MessageUI messageUI = null; 
 
@@ -291,7 +291,7 @@ namespace Hibzz.Console
 		/// </summary>
 		private void UpdateLogText()
 		{
-			logUI.text = developerConsole.GetLogs();
+			logUI.text = developerConsole.GetLogs().Trim();
 		}
 
 		/// <summary>
@@ -299,7 +299,8 @@ namespace Hibzz.Console
 		/// </summary>
 		private void UpdateDefaultColor()
 		{
-			logUI.color = defaultColor;
+			TMP_Text logtext = logUI.GetComponentInChildren<TMP_Text>();
+			logtext.color = defaultColor;
 		}
 
 #if UNITY_EDITOR
