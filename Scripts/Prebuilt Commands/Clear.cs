@@ -25,11 +25,13 @@ namespace Hibzz.Console
 				// -cd clears the cache dictionary
 				if(args[0] == "-cd")
 				{
+					Console.Log("Cache dictionary cleared", Color.cyan);
 					Console.CacheDictionary.Clear();
 					return true;
 				}
 				else
 				{
+					Console.LogError("Unkown argument \"" + args[0] + "\"");
 					return false;
 				}
 			}
