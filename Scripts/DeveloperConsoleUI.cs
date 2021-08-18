@@ -8,9 +8,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEditor;
+using System.Linq;
 
 #if ENABLE_INPUT_SYSTEM
-	using UnityEngine.InputSystem;
+using UnityEngine.InputSystem;
 #endif
 
 namespace Hibzz.Console
@@ -23,8 +24,9 @@ namespace Hibzz.Console
 		[Header("UI")]
 		[SerializeField] private GameObject uiCanvas = null;
 		[SerializeField] private TMP_InputField inputField = null;
-		[SerializeField] private TMP_Text logUI = null;
+		[SerializeField] private TMP_InputField logUI = null;
 		[SerializeField] private GameObject UIPanel = null;
+		[SerializeField] internal MessageUI messageUI = null; 
 
 		[Header("Input")]
 		#if ENABLE_INPUT_SYSTEM
@@ -57,6 +59,21 @@ namespace Hibzz.Console
 				return developerConsole;
 			}
 		}
+
+		/// <summary>
+		/// A cyclic queue used to store previous commands
+		/// </summary>
+		private CyclicQueue<string> PreviousCommands = new CyclicQueue<string>(20);
+
+		/// <summary>
+		/// A marker variable used to store the current command that the user is cycling through
+		/// </summary>
+		private int PreviousCommandMarker = 0;
+
+		/// <summary>
+		/// Text that was written, but user decided to cycle through previous commands
+		/// </summary>
+		private string currentTextBeingEditted = string.Empty;
 
 		private void Awake()
 		{
@@ -111,6 +128,66 @@ namespace Hibzz.Console
 					UpdateLogText();
 				}
 			}
+
+			// code cycle through previous commands (if they exist)
+			if (Console.IsTextboxFocused)
+			{
+				int arrowkey = 0; // variable to store whether up or down arrow key is pressed
+
+				#if ENABLE_INPUT_SYSTEM
+				if(Keyboard.current[Key.UpArrow].wasPressedThisFrame)
+				{
+					arrowkey = 1;
+				}
+				else if(Keyboard.current[Key.DownArrow].wasPressedThisFrame)
+				{
+					arrowkey = -1;
+				}
+#else
+				if (Input.GetKeyDown(KeyCode.UpArrow))
+				{
+					arrowkey = 1;
+				}
+				else if (Input.GetKeyDown(KeyCode.DownArrow))
+				{
+					arrowkey = -1;
+				}
+#endif
+
+				// if up or down arrow was pressed, process accordingly
+				if (arrowkey == 1 && PreviousCommandMarker < PreviousCommands.Count)
+				{
+					// if the user is typing something new, we store it in a cache
+					if (PreviousCommandMarker == 0)
+					{
+						currentTextBeingEditted = inputField.text;
+					}
+
+					// retrieve text from previous command queue
+					PreviousCommandMarker += 1;
+					inputField.text = PreviousCommands.ElementAt(PreviousCommands.Count - PreviousCommandMarker);
+					inputField.caretPosition = inputField.text.Length;
+				}
+				else if (arrowkey == -1 && PreviousCommandMarker > 0)
+				{
+					// move command marker down
+					PreviousCommandMarker -= 1;
+
+					// if in pos 0, it means we have reached user command
+					if (PreviousCommandMarker == 0)
+					{
+						// read from cache and update text
+						inputField.text = currentTextBeingEditted;
+						inputField.caretPosition = inputField.text.Length;
+					}
+					else
+					{
+						// if not in 0 pos, then we read from the previous command queue
+						inputField.text = PreviousCommands.ElementAt(PreviousCommands.Count - PreviousCommandMarker);
+						inputField.caretPosition = inputField.text.Length;
+					}
+				}
+			}
 		}
 
 		private void OnValidate()
@@ -153,7 +230,11 @@ namespace Hibzz.Console
 #else
 			if(!Input.GetKeyDown(KeyCode.Return)) { return; }
 #endif
+			// add the input to the previous command queue
+			PreviousCommands.Enqueue(input);
+			PreviousCommandMarker = 0;
 
+			// process the command and clear the text field
 			DeveloperConsole.ProcessCommand(input);
 			inputField.text = string.Empty;
 		}
@@ -210,7 +291,7 @@ namespace Hibzz.Console
 		/// </summary>
 		private void UpdateLogText()
 		{
-			logUI.text = developerConsole.GetLogs();
+			logUI.text = developerConsole.GetLogs().Trim();
 		}
 
 		/// <summary>
@@ -218,7 +299,8 @@ namespace Hibzz.Console
 		/// </summary>
 		private void UpdateDefaultColor()
 		{
-			logUI.color = defaultColor;
+			TMP_Text logtext = logUI.GetComponentInChildren<TMP_Text>();
+			logtext.color = defaultColor;
 		}
 
 #if UNITY_EDITOR
@@ -226,7 +308,7 @@ namespace Hibzz.Console
 		/// <summary>
 		/// [Editor only function] Scans for new commands
 		/// </summary>
-		public void Scan()
+		public List<ConsoleCommand> Scan()
 		{
 			// clear the list of existing commands
 			commands.Clear();
@@ -246,6 +328,8 @@ namespace Hibzz.Console
 					commands.Add(command);
 				}
 			}
+
+			return commands;
 		}
 
 #endif
@@ -266,7 +350,22 @@ namespace Hibzz.Console
 			DeveloperConsoleUI console = target as DeveloperConsoleUI;
 			if(GUILayout.Button("Scan for Commands", GUILayout.Height(25)))
 			{
-				console.Scan();
+				List<ConsoleCommand> commands = console.Scan();
+
+				// after scanning, reserialize the list
+				SerializedProperty commandsProperty = serializedObject.FindProperty("commands");
+
+				commandsProperty.ClearArray();
+				int i = 0;
+
+				foreach(var command in commands)
+				{
+					commandsProperty.InsertArrayElementAtIndex(i);
+					commandsProperty.GetArrayElementAtIndex(i).objectReferenceValue = command;
+					i++;
+				}
+
+				serializedObject.ApplyModifiedProperties();
 			}
 		}
 	}

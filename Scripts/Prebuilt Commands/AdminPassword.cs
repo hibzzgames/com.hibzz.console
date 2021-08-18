@@ -11,7 +11,7 @@ namespace Hibzz.Console
 	[CreateAssetMenu(fileName = "AdminPasswordCmd", menuName = "Console/Built-in Commands/Admin Passsword")]
 	public class AdminPassword : ConsoleCommand
 	{
-		[Tooltip("Please don't use \"revoke\" as a password")]
+		[Tooltip("Please don't use \"-r\" as a password")]
 		[SerializeField] private string password = "default";
 
 		public AdminPassword()
@@ -22,22 +22,30 @@ namespace Hibzz.Console
 
 		public override bool Process(string[] args)
 		{
+			// if there are no args given, return false
+			if(args.Length < 1)
+			{
+				Console.LogError("Invalid args");
+				return false;
+			}
+
 			// if the incoming argument matches the set password, then set it
 			if(password == args[0])
 			{
 				Console.RequestAdminAccess();
-				Console.Log("Admin access granted", Color.green);
+				Console.LogSuccess("Admin access granted");
 				return true;
 			}
 			// or if the incoming argument matches the keyword "revoke", it revokes console admin access
 			// hopefully no one set's the password as revoke
-			else if(args[0] == "revoke")
+			else if(args[0] == "-r")
 			{
 				Console.RevokeAdminAccess();
-				Console.Log("Admin access revoked", Color.red);
+				Console.LogInfo("Admin access removed");
 				return true;
 			}
 
+			Console.LogError("Incorrect password");
 			return false;
 		}
 	}

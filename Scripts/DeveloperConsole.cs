@@ -84,16 +84,23 @@ namespace Hibzz.Console
 				{ continue; }
 
 				// if the command requires admin acceess and if the console currently has no admin access, then don't execute the command
-				if(command.RequiresAdminAccess && !AdminAccess) { return; }
+				if(command.RequiresAdminAccess && !AdminAccess) 
+				{
+					Console.LogWarning("Command requires admin access");
+					return; 
+				}
 
 				if(!command.Process(args))
 				{
-					// TODO: Print "invalid args"
+					// represents failure to execute command... idk what to do with it
 					return;
 				}
+
+				return;
 			}
 
 			// TODO: Notify "Invalid command"
+			Console.LogWarning("Invalid Command");
 		}
 
 		/// <summary>
@@ -195,8 +202,6 @@ namespace Hibzz.Console
 			#if UNITY_EDITOR
 			SessionState.SetBool("ConsoleAdminAccess", AdminAccess);
 			#endif
-
-			Debug.Log("Granted admin access to the console");
 		}
 
 		/// <summary>
@@ -209,8 +214,6 @@ namespace Hibzz.Console
 			#if UNITY_EDITOR
 				SessionState.EraseBool("ConsoleAdminAccess");
 			#endif
-
-			Debug.Log("Revoked admin acceess to the console");
 		}
 	}
 }
