@@ -314,10 +314,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefix: /
   commands:
-  - {fileID: 11400000, guid: fe482eae904f6ef479c238141137f379, type: 2}
-  - {fileID: 11400000, guid: fad850a36cfb5784384bec8e0fe5f9cc, type: 2}
-  - {fileID: 11400000, guid: 0b7f8e15218bb7d41b09d66ec8a14731, type: 2}
-  - {fileID: 11400000, guid: b36a1a82ac62d4f45a7d942278e1d1e1, type: 2}
   - {fileID: 11400000, guid: be8a611cc43be5744b79767982cea0ac, type: 2}
   uiCanvas: {fileID: 855559481631051708}
   inputField: {fileID: 855559482485143244}

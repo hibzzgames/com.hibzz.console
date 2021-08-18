@@ -308,7 +308,7 @@ namespace Hibzz.Console
 		/// <summary>
 		/// [Editor only function] Scans for new commands
 		/// </summary>
-		public void Scan()
+		public List<ConsoleCommand> Scan()
 		{
 			// clear the list of existing commands
 			commands.Clear();
@@ -328,6 +328,8 @@ namespace Hibzz.Console
 					commands.Add(command);
 				}
 			}
+
+			return commands;
 		}
 
 #endif
@@ -348,7 +350,22 @@ namespace Hibzz.Console
 			DeveloperConsoleUI console = target as DeveloperConsoleUI;
 			if(GUILayout.Button("Scan for Commands", GUILayout.Height(25)))
 			{
-				console.Scan();
+				List<ConsoleCommand> commands = console.Scan();
+
+				// after scanning, reserialize the list
+				SerializedProperty commandsProperty = serializedObject.FindProperty("commands");
+
+				commandsProperty.ClearArray();
+				int i = 0;
+
+				foreach(var command in commands)
+				{
+					commandsProperty.InsertArrayElementAtIndex(i);
+					commandsProperty.GetArrayElementAtIndex(i).objectReferenceValue = command;
+					i++;
+				}
+
+				serializedObject.ApplyModifiedProperties();
 			}
 		}
 	}
