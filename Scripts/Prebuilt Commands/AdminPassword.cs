@@ -25,6 +25,7 @@ namespace Hibzz.Console
 			// if there are no args given, return false
 			if(args.Length < 1)
 			{
+				Console.LogError("Invalid args");
 				return false;
 			}
 
@@ -44,6 +45,7 @@ namespace Hibzz.Console
 				return true;
 			}
 
+			Console.LogError("Incorrect password");
 			return false;
 		}
 	}
