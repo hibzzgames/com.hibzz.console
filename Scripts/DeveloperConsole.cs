@@ -93,6 +93,7 @@ namespace Hibzz.Console
 				if(!command.Process(args))
 				{
 					// TODO: Print "invalid args"
+					Console.LogError("Invalid args");
 					return;
 				}
 
