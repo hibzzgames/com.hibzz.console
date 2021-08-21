@@ -105,5 +105,23 @@ namespace Hibzz.Console
 		{
 			DeveloperConsoleUI.instance.messageUI.SendMessage(message, MessageUI.Type.Success);
 		}
+
+		/// <summary>
+		/// Set the width of the console
+		/// </summary>
+		/// <param name="width"> The width of the console </param>
+		public static void Width(float width)
+		{
+			DeveloperConsoleUI.instance.Width = width;
+		}
+
+		/// <summary>
+		/// Set the height of the console
+		/// </summary>
+		/// <param name="height"> The height of the console </param>
+		public static void Height(float height)
+		{
+			DeveloperConsoleUI.instance.Height = height;
+		}
 	}
 }

@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEditor;
 using System.Linq;
+using System.Collections;
 
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -43,6 +44,20 @@ namespace Hibzz.Console
 			set { defaultColor = value; UpdateDefaultColor(); }
 		}
 
+		[SerializeField] private float width = 210.0f;
+		public float Width
+		{
+			get { return width; }
+			set { width = value; UpdateSize(); }
+		}
+
+		[SerializeField] private float height = 85.0f;
+		public float Height
+		{
+			get { return height; }
+			set { height = value; UpdateSize(); }
+		}
+
 		// Singleton UI instancce
 		internal static DeveloperConsoleUI instance;
 
@@ -75,7 +90,9 @@ namespace Hibzz.Console
 		/// </summary>
 		private string currentTextBeingEditted = string.Empty;
 
-		private void Awake()
+		internal int numberOfLines = 6;
+
+		private void Awake()  
 		{
 			// singleton pattern that destroys any new Developer Console UI
 			if(instance != null && instance != this)
@@ -89,6 +106,8 @@ namespace Hibzz.Console
 			instance = this;
 			DontDestroyOnLoad(gameObject);
 			logUI.text = string.Empty;
+
+			numberOfLines = Mathf.CeilToInt((height - 27.5f) / 10.551f);
 		}
 
 		private void Update()
@@ -193,6 +212,7 @@ namespace Hibzz.Console
 		private void OnValidate()
 		{
 			UpdateDefaultColor();
+			UpdateSize();
 		}
 
 		/// <summary>
@@ -303,6 +323,28 @@ namespace Hibzz.Console
 			logtext.color = defaultColor;
 		}
 
+		/// <summary>
+		/// Updates the size of the console
+		/// </summary>
+		/// <returns> Nothing. It returns nothing. Nada. </returns>
+		private void UpdateSize()
+		{
+			UIPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
+			
+			RectTransform MessageUIRect = messageUI.GetComponent<RectTransform>();
+			MessageUIRect.sizeDelta = new Vector2(width, MessageUIRect.sizeDelta.y);
+			MessageUIRect.anchoredPosition = new Vector2(MessageUIRect.anchoredPosition.x, height + 22.5f);
+
+			numberOfLines = Mathf.CeilToInt((height - 27.5f) / 10.551f);
+
+			string text = "";
+			for(int i = numberOfLines; i > 0; --i)
+			{
+				text += "log " + i + "\n";
+			}
+			logUI.text = text.TrimEnd();
+		}
+
 #if UNITY_EDITOR
 
 		/// <summary>
@@ -331,6 +373,8 @@ namespace Hibzz.Console
 
 			return commands;
 		}
+
+		
 
 #endif
 	}

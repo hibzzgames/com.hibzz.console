@@ -111,10 +111,8 @@ namespace Hibzz.Console
 		{
 			string result = "";
 
-			// 6 (7 - 1 = 6) is the number of messages I've configured.
-			// At a later point I must change it to something that users can configure from the
-			// editor like the logger size or something
-			for (int i = scrollPos - 1; i >= scrollPos - 6 - 1; --i)
+			// prints based on the number of lines
+			for (int i = scrollPos - 1; i >= scrollPos - DeveloperConsoleUI.instance.numberOfLines - 1; --i)
 			{
 				// skip if it's an invalid element
 				if(i < 0) { return result; }
@@ -158,10 +156,10 @@ namespace Hibzz.Console
 		/// </summary>
 		public void ScrollUp()
 		{
-			if(logs.Count > 6 - 1)
+			if(logs.Count > DeveloperConsoleUI.instance.numberOfLines - 1)
 			{
 				--scrollPos;
-				scrollPos = Mathf.Clamp(scrollPos, 6 - 2, logs.Count);
+				scrollPos = Mathf.Clamp(scrollPos, DeveloperConsoleUI.instance.numberOfLines - 2, logs.Count);
 			}
 		}
 
