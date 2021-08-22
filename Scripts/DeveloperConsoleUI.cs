@@ -90,6 +90,9 @@ namespace Hibzz.Console
 		/// </summary>
 		private string currentTextBeingEditted = string.Empty;
 
+		/// <summary>
+		/// number of lines in the console to be displayed based on height
+		/// </summary>
 		internal int numberOfLines = 6;
 
 		private void Awake()  
@@ -107,7 +110,11 @@ namespace Hibzz.Console
 			DontDestroyOnLoad(gameObject);
 			logUI.text = string.Empty;
 
+			// calculate the number of lines based on height of console and font height of the font
 			numberOfLines = Mathf.CeilToInt((height - 27.5f) / 10.551f);
+
+			// new pointer event data on the current event system
+			pointerEventData = new PointerEventData(EventSystem.current);
 		}
 
 		private void Update()
@@ -280,20 +287,28 @@ namespace Hibzz.Console
 		}
 
 		/// <summary>
+		/// Stores pointer event data of the current mouse
+		/// </summary>
+		private PointerEventData pointerEventData = null;
+
+		/// <summary>
+		/// A list to store raycast result when checking for mouse hovering over console
+		/// </summary>
+		private List<RaycastResult> raycastResults = new List<RaycastResult>();
+
+		/// <summary>
 		/// Is the user currently hovering over the console panel
 		/// </summary>
 		/// <returns> True if the user is hovering over the console panel </returns>
 		private bool IsHoveredOverConsole()
 		{
-			PointerEventData pointerEventData = new PointerEventData(EventSystem.current); // can be cached
-
-#if ENABLE_INPUT_SYSTEM
+			#if ENABLE_INPUT_SYSTEM
 			pointerEventData.position = Mouse.current.position.ReadValue();
-#else
+			#else
 			pointerEventData.position = Input.mousePosition;
-#endif
+			#endif
 			
-			List<RaycastResult> raycastResults = new List<RaycastResult>(); // can be cached as well
+			raycastResults.Clear();
 			EventSystem.current.RaycastAll(pointerEventData, raycastResults);
 
 			// if it's hovered over the UI panel, then we return true
