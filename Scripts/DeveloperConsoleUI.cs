@@ -305,6 +305,7 @@ namespace Hibzz.Console
 				// add the input to the previous command queue (if it's not the
 				// last element in the queue... This helps prevent having repeat
 				// element in the cyclic queue)
+				input = input.Trim();
 				if (PreviousCommands.Last != input) { PreviousCommands.Enqueue(input); }
 				DeveloperConsole.ProcessCommand(input);
 			}
