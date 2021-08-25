@@ -25,6 +25,7 @@ namespace Hibzz.Console
 			// if there are no args given then we request a secured password
 			if(args.Length < 1)
 			{
+				Console.PostInfo("Enter password in the secure input field");
 				Console.RequestSecureInput(this);
 				return true;
 			}
