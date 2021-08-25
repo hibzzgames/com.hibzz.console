@@ -158,6 +158,8 @@ namespace Hibzz.Console
 			// code cycle through previous commands (if they exist)
 			if (Console.IsTextboxFocused)
 			{
+				#region Command Cycling
+
 				int arrowkey = 0; // variable to store whether up or down arrow key is pressed
 
 				#if ENABLE_INPUT_SYSTEM
@@ -169,7 +171,7 @@ namespace Hibzz.Console
 				{
 					arrowkey = -1;
 				}
-#else
+				#else
 				if (Input.GetKeyDown(KeyCode.UpArrow))
 				{
 					arrowkey = 1;
@@ -178,7 +180,7 @@ namespace Hibzz.Console
 				{
 					arrowkey = -1;
 				}
-#endif
+				#endif
 
 				// if up or down arrow was pressed, process accordingly
 				if (arrowkey == 1 && PreviousCommandMarker < PreviousCommands.Count)
@@ -213,6 +215,40 @@ namespace Hibzz.Console
 						inputField.caretPosition = inputField.text.Length;
 					}
 				}
+
+				#endregion
+
+				#region Autocomplete
+
+				// check if tab key was pressed during this update loop
+				bool TabKeyWasPressed = false;
+
+				#if ENABLE_INPUT_SYSTEM
+				TabKeyWasPressed = Keyboard.current[Key.Tab].wasPressedThisFrame;
+				#else
+				TabKeyWasPressed = Input.GetKeyDown(KeyCode.Tab);
+				#endif
+
+				// If the tab key was pressed then we need to process the autocomplete for commands.
+				// To recognize it as an autocomplet for commands, we check that the command starts
+				// with the command prefix and doesnt contain any spaces
+				if(TabKeyWasPressed && inputField.text.StartsWith(prefix) && !inputField.text.Contains(" "))
+				{
+					string partialCommandWord = inputField.text.Remove(0, prefix.Length);
+
+					// look through each console command and see if the partial command starts with any command word
+					foreach(ConsoleCommand command in commands)
+					{
+						if(command.CommandWord.StartsWith(partialCommandWord, System.StringComparison.OrdinalIgnoreCase))
+						{
+							inputField.text = prefix + command.CommandWord + " ";
+							inputField.caretPosition = inputField.text.Length;
+							break;
+						}
+					}
+				}
+
+				#endregion
 			}
 		}
 
@@ -304,11 +340,11 @@ namespace Hibzz.Console
 		/// <returns> True if the user is hovering over the console panel </returns>
 		private bool IsHoveredOverConsole()
 		{
-			#if ENABLE_INPUT_SYSTEM
+#if ENABLE_INPUT_SYSTEM
 			pointerEventData.position = Mouse.current.position.ReadValue();
-			#else
+#else
 			pointerEventData.position = Input.mousePosition;
-			#endif
+#endif
 			
 			raycastResults.Clear();
 			EventSystem.current.RaycastAll(pointerEventData, raycastResults);
