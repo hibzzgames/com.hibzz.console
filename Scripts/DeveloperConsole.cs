@@ -86,7 +86,7 @@ namespace Hibzz.Console
 				// if the command requires admin acceess and if the console currently has no admin access, then don't execute the command
 				if(command.RequiresAdminAccess && !AdminAccess) 
 				{
-					Console.LogWarning("Command requires admin access");
+					Console.PostWarning("Command requires admin access");
 					return; 
 				}
 
@@ -100,7 +100,7 @@ namespace Hibzz.Console
 			}
 
 			// TODO: Notify "Invalid command"
-			Console.LogWarning("Invalid Command");
+			Console.PostWarning("Invalid Command");
 		}
 
 		/// <summary>
@@ -111,10 +111,8 @@ namespace Hibzz.Console
 		{
 			string result = "";
 
-			// 6 (7 - 1 = 6) is the number of messages I've configured.
-			// At a later point I must change it to something that users can configure from the
-			// editor like the logger size or something
-			for (int i = scrollPos - 1; i >= scrollPos - 6 - 1; --i)
+			// prints based on the number of lines
+			for (int i = scrollPos - 1; i >= scrollPos - DeveloperConsoleUI.instance.numberOfLines - 1; --i)
 			{
 				// skip if it's an invalid element
 				if(i < 0) { return result; }
@@ -158,10 +156,10 @@ namespace Hibzz.Console
 		/// </summary>
 		public void ScrollUp()
 		{
-			if(logs.Count > 6 - 1)
+			if(logs.Count > DeveloperConsoleUI.instance.numberOfLines - 1)
 			{
 				--scrollPos;
-				scrollPos = Mathf.Clamp(scrollPos, 6 - 2, logs.Count);
+				scrollPos = Mathf.Clamp(scrollPos, DeveloperConsoleUI.instance.numberOfLines - 2, logs.Count);
 			}
 		}
 

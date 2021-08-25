@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEditor;
 using System.Linq;
+using System.Collections;
 
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -22,10 +23,10 @@ namespace Hibzz.Console
 		[SerializeField] private List<ConsoleCommand> commands = new List<ConsoleCommand>();
 
 		[Header("UI")]
-		[SerializeField] private GameObject uiCanvas = null;
-		[SerializeField] private TMP_InputField inputField = null;
-		[SerializeField] private TMP_InputField logUI = null;
-		[SerializeField] private GameObject UIPanel = null;
+		[SerializeField] internal GameObject uiCanvas = null;
+		[SerializeField] internal TMP_InputField inputField = null;
+		[SerializeField] internal TMP_InputField logUI = null;
+		[SerializeField] internal GameObject UIPanel = null;
 		[SerializeField] internal MessageUI messageUI = null; 
 
 		[Header("Input")]
@@ -41,6 +42,20 @@ namespace Hibzz.Console
 		{
 			get { return defaultColor; }
 			set { defaultColor = value; UpdateDefaultColor(); }
+		}
+
+		[SerializeField] private float width = 210.0f;
+		public float Width
+		{
+			get { return width; }
+			set { width = value; UpdateSize(); }
+		}
+
+		[SerializeField] private float height = 85.0f;
+		public float Height
+		{
+			get { return height; }
+			set { height = value; UpdateSize(); }
 		}
 
 		// Singleton UI instancce
@@ -75,7 +90,17 @@ namespace Hibzz.Console
 		/// </summary>
 		private string currentTextBeingEditted = string.Empty;
 
-		private void Awake()
+		/// <summary>
+		/// number of lines in the console to be displayed based on height
+		/// </summary>
+		internal int numberOfLines = 6;
+
+		/// <summary>
+		/// The requester, requesting a secure input
+		/// </summary>
+		internal ConsoleCommand secureInputRequester = null;
+
+		private void Awake()  
 		{
 			// singleton pattern that destroys any new Developer Console UI
 			if(instance != null && instance != this)
@@ -89,6 +114,12 @@ namespace Hibzz.Console
 			instance = this;
 			DontDestroyOnLoad(gameObject);
 			logUI.text = string.Empty;
+
+			// calculate the number of lines based on height of console and font height of the font
+			numberOfLines = Mathf.CeilToInt((height - 27.5f) / 10.551f);
+
+			// new pointer event data on the current event system
+			pointerEventData = new PointerEventData(EventSystem.current);
 		}
 
 		private void Update()
@@ -132,6 +163,8 @@ namespace Hibzz.Console
 			// code cycle through previous commands (if they exist)
 			if (Console.IsTextboxFocused)
 			{
+				#region Command Cycling
+
 				int arrowkey = 0; // variable to store whether up or down arrow key is pressed
 
 				#if ENABLE_INPUT_SYSTEM
@@ -143,7 +176,7 @@ namespace Hibzz.Console
 				{
 					arrowkey = -1;
 				}
-#else
+				#else
 				if (Input.GetKeyDown(KeyCode.UpArrow))
 				{
 					arrowkey = 1;
@@ -152,7 +185,7 @@ namespace Hibzz.Console
 				{
 					arrowkey = -1;
 				}
-#endif
+				#endif
 
 				// if up or down arrow was pressed, process accordingly
 				if (arrowkey == 1 && PreviousCommandMarker < PreviousCommands.Count)
@@ -187,12 +220,47 @@ namespace Hibzz.Console
 						inputField.caretPosition = inputField.text.Length;
 					}
 				}
+
+				#endregion
+
+				#region Autocomplete
+
+				// check if tab key was pressed during this update loop
+				bool TabKeyWasPressed = false;
+
+				#if ENABLE_INPUT_SYSTEM
+				TabKeyWasPressed = Keyboard.current[Key.Tab].wasPressedThisFrame;
+				#else
+				TabKeyWasPressed = Input.GetKeyDown(KeyCode.Tab);
+				#endif
+
+				// If the tab key was pressed then we need to process the autocomplete for commands.
+				// To recognize it as an autocomplet for commands, we check that the command starts
+				// with the command prefix and doesnt contain any spaces
+				if(TabKeyWasPressed && inputField.text.StartsWith(prefix) && !inputField.text.Contains(" "))
+				{
+					string partialCommandWord = inputField.text.Remove(0, prefix.Length);
+
+					// look through each console command and see if the partial command starts with any command word
+					foreach(ConsoleCommand command in commands)
+					{
+						if(command.CommandWord.StartsWith(partialCommandWord, System.StringComparison.OrdinalIgnoreCase))
+						{
+							inputField.text = prefix + command.CommandWord + " ";
+							inputField.caretPosition = inputField.text.Length;
+							break;
+						}
+					}
+				}
+
+				#endregion
 			}
 		}
 
 		private void OnValidate()
 		{
 			UpdateDefaultColor();
+			UpdateSize();
 		}
 
 		/// <summary>
@@ -230,12 +298,36 @@ namespace Hibzz.Console
 #else
 			if(!Input.GetKeyDown(KeyCode.Return)) { return; }
 #endif
-			// add the input to the previous command queue
-			PreviousCommands.Enqueue(input);
-			PreviousCommandMarker = 0;
 
-			// process the command and clear the text field
-			DeveloperConsole.ProcessCommand(input);
+			// if there are no secure input requesters, then process the command naturally
+			if(secureInputRequester == null)
+			{
+				// add the input to the previous command queue (if it's not the
+				// last element in the queue... This helps prevent having repeat
+				// element in the cyclic queue)
+				input = input.Trim();
+				if (PreviousCommands.Last != input) { PreviousCommands.Enqueue(input); }
+				DeveloperConsole.ProcessCommand(input);
+			}
+			else
+			{
+				// if there is a secure command requester, then process the text in the input box as a secure input.
+				// The only thing I'm doing weird is storing it in a temporary variable and handling the input using the temporary variable.
+				// The reason why this is done is to facilitate the ability to request another secure input from within HandleSecureInput
+				ConsoleCommand tempRequester = secureInputRequester;
+				secureInputRequester = null;
+				tempRequester.HandleSecureInput(inputField.text);
+
+				// reset the input field back to normal
+				if(secureInputRequester == null)
+				{
+					inputField.contentType = TMP_InputField.ContentType.Standard;
+					inputField.placeholder.GetComponent<TMP_Text>().text = ">";
+				}
+			}
+
+			// clear the text field and reset the command marker
+			PreviousCommandMarker = 0;
 			inputField.text = string.Empty;
 		}
 
@@ -260,20 +352,28 @@ namespace Hibzz.Console
 		}
 
 		/// <summary>
+		/// Stores pointer event data of the current mouse
+		/// </summary>
+		private PointerEventData pointerEventData = null;
+
+		/// <summary>
+		/// A list to store raycast result when checking for mouse hovering over console
+		/// </summary>
+		private List<RaycastResult> raycastResults = new List<RaycastResult>();
+
+		/// <summary>
 		/// Is the user currently hovering over the console panel
 		/// </summary>
 		/// <returns> True if the user is hovering over the console panel </returns>
 		private bool IsHoveredOverConsole()
 		{
-			PointerEventData pointerEventData = new PointerEventData(EventSystem.current); // can be cached
-
 #if ENABLE_INPUT_SYSTEM
 			pointerEventData.position = Mouse.current.position.ReadValue();
 #else
 			pointerEventData.position = Input.mousePosition;
 #endif
 			
-			List<RaycastResult> raycastResults = new List<RaycastResult>(); // can be cached as well
+			raycastResults.Clear();
 			EventSystem.current.RaycastAll(pointerEventData, raycastResults);
 
 			// if it's hovered over the UI panel, then we return true
@@ -301,6 +401,28 @@ namespace Hibzz.Console
 		{
 			TMP_Text logtext = logUI.GetComponentInChildren<TMP_Text>();
 			logtext.color = defaultColor;
+		}
+
+		/// <summary>
+		/// Updates the size of the console
+		/// </summary>
+		/// <returns> Nothing. It returns nothing. Nada. </returns>
+		private void UpdateSize()
+		{
+			UIPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
+			
+			RectTransform MessageUIRect = messageUI.GetComponent<RectTransform>();
+			MessageUIRect.sizeDelta = new Vector2(width, MessageUIRect.sizeDelta.y);
+			MessageUIRect.anchoredPosition = new Vector2(MessageUIRect.anchoredPosition.x, height + 22.5f);
+
+			numberOfLines = Mathf.CeilToInt((height - 27.5f) / 10.551f);
+
+			string text = "";
+			for(int i = numberOfLines; i > 0; --i)
+			{
+				text += "log " + i + "\n";
+			}
+			logUI.text = text.TrimEnd();
 		}
 
 #if UNITY_EDITOR
@@ -331,6 +453,8 @@ namespace Hibzz.Console
 
 			return commands;
 		}
+
+		
 
 #endif
 	}

@@ -20,5 +20,8 @@ namespace Hibzz.Console
 
 		// abstract class that children must implement
 		public abstract bool Process(string[] args);
+
+		// virtual class that the children may implement to handle secure input
+		public virtual void HandleSecureInput(string input) { }
 	}
 }

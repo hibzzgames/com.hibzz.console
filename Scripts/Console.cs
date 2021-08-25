@@ -75,7 +75,7 @@ namespace Hibzz.Console
 		/// Display an error message
 		/// </summary>
 		/// <param name="message"> the message to display </param>
-		public static void LogError(string message)
+		public static void PostError(string message)
 		{
 			DeveloperConsoleUI.instance.messageUI.SendMessage(message, MessageUI.Type.Error);
 		}
@@ -84,7 +84,7 @@ namespace Hibzz.Console
 		/// Display a warning message
 		/// </summary>
 		/// <param name="message"> The message to display </param>
-		public static void LogWarning(string message)
+		public static void PostWarning(string message)
 		{
 			DeveloperConsoleUI.instance.messageUI.SendMessage(message, MessageUI.Type.Warning);
 		}
@@ -93,7 +93,7 @@ namespace Hibzz.Console
 		/// Display an "informational" message
 		/// </summary>
 		/// <param name="message"> The message to display </param>
-		public static void LogInfo(string message)
+		public static void PostInfo(string message)
 		{
 			DeveloperConsoleUI.instance.messageUI.SendMessage(message, MessageUI.Type.Info);		}
 
@@ -101,9 +101,56 @@ namespace Hibzz.Console
 		/// Display a success message
 		/// </summary>
 		/// <param name="message"> The message to display </param>
-		public static void LogSuccess(string message)
+		public static void PostSuccess(string message)
 		{
 			DeveloperConsoleUI.instance.messageUI.SendMessage(message, MessageUI.Type.Success);
 		}
+
+		/// <summary>
+		/// Set the width of the console
+		/// </summary>
+		/// <param name="width"> The width of the console </param>
+		public static void Width(float width)
+		{
+			DeveloperConsoleUI.instance.Width = width;
+		}
+
+		/// <summary>
+		/// Set the height of the console
+		/// </summary>
+		/// <param name="height"> The height of the console </param>
+		public static void Height(float height)
+		{
+			DeveloperConsoleUI.instance.Height = height;
+		}
+
+		/// <summary>
+		/// Request a secure input from the user which can be handled in the 
+		/// HandleSecureInput virtual function
+		/// </summary>
+		/// <param name="command">The console command requesting the secure input</param>
+		public static void RequestSecureInput(ConsoleCommand command, string placeholder = "SECURE INPUT")
+		{
+			DeveloperConsoleUI.instance.secureInputRequester = command;
+
+			DeveloperConsoleUI.instance.inputField.contentType = TMPro.TMP_InputField.ContentType.Password;
+			DeveloperConsoleUI.instance.inputField.placeholder.GetComponent<TMPro.TMP_Text>().text = placeholder;
+		}
+
+		#region Deprecated Functions
+
+		[System.Obsolete("This function is deprecate and is slated to be removed in v1.3. Use PostError instead.")]
+		public static void LogError(string message) { }
+
+		[System.Obsolete("This function is deprecate and is slated to be removed in v1.3. Use PostWarning instead.")]
+		public static void LogWarning(string message) { }
+
+		[System.Obsolete("This function is deprecate and is slated to be removed in v1.3. Use PostInfo instead.")]
+		public static void LogInfo(string message) { }
+
+		[System.Obsolete("This function is deprecate and is slated to be removed in v1.3. Use PostSuccess instead.")]
+		public static void LogSuccess(string message) { }
+
+		#endregion
 	}
 }

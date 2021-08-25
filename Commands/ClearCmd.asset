@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28759ef5cfef91848a374f31548a8563, type: 3}
   m_Name: ClearCmd
   m_EditorClassIdentifier: 
-  CommandWord: Clear
+  CommandWord: clear
+  RequiresAdminAccess: 0
   IncludeInScan: 1
