@@ -123,5 +123,18 @@ namespace Hibzz.Console
 		{
 			DeveloperConsoleUI.instance.Height = height;
 		}
+
+		/// <summary>
+		/// Request a secure input from the user which can be handled in the 
+		/// HandleSecureInput virtual function
+		/// </summary>
+		/// <param name="command">The console command requesting the secure input</param>
+		public static void RequestSecureInput(ConsoleCommand command, string placeholder = "SECURE INPUT")
+		{
+			DeveloperConsoleUI.instance.secureInputRequester = command;
+
+			DeveloperConsoleUI.instance.inputField.contentType = TMPro.TMP_InputField.ContentType.Password;
+			DeveloperConsoleUI.instance.inputField.placeholder.GetComponent<TMPro.TMP_Text>().text = placeholder;
+		}
 	}
 }

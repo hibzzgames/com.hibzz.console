@@ -11,7 +11,7 @@ namespace Hibzz.Console
 	[CreateAssetMenu(fileName = "AdminPasswordCmd", menuName = "Console/Built-in Commands/Admin Passsword")]
 	public class AdminPassword : ConsoleCommand
 	{
-		[Tooltip("Please don't use \"-r\" as a password")]
+		[Tooltip("The password to set")]
 		[SerializeField] private string password = "default";
 
 		public AdminPassword()
@@ -22,31 +22,43 @@ namespace Hibzz.Console
 
 		public override bool Process(string[] args)
 		{
-			// if there are no args given, return false
+			// if there are no args given then we request a secured password
 			if(args.Length < 1)
 			{
-				Console.ReportError("Invalid args");
-				return false;
-			}
-
-			// if the incoming argument matches the set password, then set it
-			if(password == args[0])
-			{
-				Console.RequestAdminAccess();
-				Console.ReportSuccess("Admin access granted");
+				Console.RequestSecureInput(this);
 				return true;
 			}
-			// or if the incoming argument matches the keyword "revoke", it revokes console admin access
-			// hopefully no one set's the password as revoke
-			else if(args[0] == "-r")
+
+			// If the incoming argument matches the keyword "-revoke", it revokes
+			// console admin access
+			if(args[0] == "-r" || args[0] == "-revoke")
 			{
 				Console.RevokeAdminAccess();
 				Console.ReportInfo("Admin access removed");
 				return true;
 			}
 
-			Console.ReportError("Incorrect password");
+			Console.ReportWarning("Unrecognized parameters");
 			return false;
+		}
+
+		/// <summary>
+		/// This function is used to handle a secure input
+		/// </summary>
+		/// <param name="input"> The user given secure input </param>
+		public override void HandleSecureInput(string input)
+		{
+			// if the password matches, grant admin access and report a success message
+			if(password == input)
+			{
+				Console.RequestAdminAccess();
+				Console.ReportSuccess("Admin access granted");
+			}
+			else
+			{
+				// else post a message that the user entered an incorrect password
+				Console.ReportError("Incorrect password");
+			}
 		}
 	}
 }

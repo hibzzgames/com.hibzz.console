@@ -23,10 +23,10 @@ namespace Hibzz.Console
 		[SerializeField] private List<ConsoleCommand> commands = new List<ConsoleCommand>();
 
 		[Header("UI")]
-		[SerializeField] private GameObject uiCanvas = null;
-		[SerializeField] private TMP_InputField inputField = null;
-		[SerializeField] private TMP_InputField logUI = null;
-		[SerializeField] private GameObject UIPanel = null;
+		[SerializeField] internal GameObject uiCanvas = null;
+		[SerializeField] internal TMP_InputField inputField = null;
+		[SerializeField] internal TMP_InputField logUI = null;
+		[SerializeField] internal GameObject UIPanel = null;
 		[SerializeField] internal MessageUI messageUI = null; 
 
 		[Header("Input")]
@@ -94,6 +94,11 @@ namespace Hibzz.Console
 		/// number of lines in the console to be displayed based on height
 		/// </summary>
 		internal int numberOfLines = 6;
+
+		/// <summary>
+		/// The requester, requesting a secure input
+		/// </summary>
+		internal ConsoleCommand secureInputRequester = null;
 
 		private void Awake()  
 		{
@@ -293,14 +298,35 @@ namespace Hibzz.Console
 #else
 			if(!Input.GetKeyDown(KeyCode.Return)) { return; }
 #endif
-			// add the input to the previous command queue (if it's not the
-			// last element in the queue... This helps prevent having repeat
-			// element in the cyclic queue)
-			if (PreviousCommands.Last != input) { PreviousCommands.Enqueue(input); }
-			PreviousCommandMarker = 0;
 
-			// process the command and clear the text field
-			DeveloperConsole.ProcessCommand(input);
+			// if there are no secure input requesters, then process the command naturally
+			if(secureInputRequester == null)
+			{
+				// add the input to the previous command queue (if it's not the
+				// last element in the queue... This helps prevent having repeat
+				// element in the cyclic queue)
+				if (PreviousCommands.Last != input) { PreviousCommands.Enqueue(input); }
+				DeveloperConsole.ProcessCommand(input);
+			}
+			else
+			{
+				// if there is a secure command requester, then process the text in the input box as a secure input.
+				// The only thing I'm doing weird is storing it in a temporary variable and handling the input using the temporary variable.
+				// The reason why this is done is to facilitate the ability to request another secure input from within HandleSecureInput
+				ConsoleCommand tempRequester = secureInputRequester;
+				secureInputRequester = null;
+				tempRequester.HandleSecureInput(inputField.text);
+
+				// reset the input field back to normal
+				if(secureInputRequester == null)
+				{
+					inputField.contentType = TMP_InputField.ContentType.Standard;
+					inputField.placeholder.GetComponent<TMP_Text>().text = ">";
+				}
+			}
+
+			// clear the text field and reset the command marker
+			PreviousCommandMarker = 0;
 			inputField.text = string.Empty;
 		}
 
