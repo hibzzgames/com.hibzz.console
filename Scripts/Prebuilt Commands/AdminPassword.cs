@@ -34,11 +34,11 @@ namespace Hibzz.Console
 			if(args[0] == "-r" || args[0] == "-revoke")
 			{
 				Console.RevokeAdminAccess();
-				Console.ReportInfo("Admin access removed");
+				Console.PostInfo("Admin access removed");
 				return true;
 			}
 
-			Console.ReportWarning("Unrecognized parameters");
+			Console.PostWarning("Unrecognized parameters");
 			return false;
 		}
 
@@ -52,12 +52,12 @@ namespace Hibzz.Console
 			if(password == input)
 			{
 				Console.RequestAdminAccess();
-				Console.ReportSuccess("Admin access granted");
+				Console.PostSuccess("Admin access granted");
 			}
 			else
 			{
 				// else post a message that the user entered an incorrect password
-				Console.ReportError("Incorrect password");
+				Console.PostError("Incorrect password");
 			}
 		}
 	}
