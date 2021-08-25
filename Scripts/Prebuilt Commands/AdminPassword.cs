@@ -25,7 +25,7 @@ namespace Hibzz.Console
 			// if there are no args given, return false
 			if(args.Length < 1)
 			{
-				Console.LogError("Invalid args");
+				Console.ReportError("Invalid args");
 				return false;
 			}
 
@@ -33,7 +33,7 @@ namespace Hibzz.Console
 			if(password == args[0])
 			{
 				Console.RequestAdminAccess();
-				Console.LogSuccess("Admin access granted");
+				Console.ReportSuccess("Admin access granted");
 				return true;
 			}
 			// or if the incoming argument matches the keyword "revoke", it revokes console admin access
@@ -41,11 +41,11 @@ namespace Hibzz.Console
 			else if(args[0] == "-r")
 			{
 				Console.RevokeAdminAccess();
-				Console.LogInfo("Admin access removed");
+				Console.ReportInfo("Admin access removed");
 				return true;
 			}
 
-			Console.LogError("Incorrect password");
+			Console.ReportError("Incorrect password");
 			return false;
 		}
 	}

@@ -31,7 +31,7 @@ namespace Hibzz.Console
 				}
 				else
 				{
-					Console.LogError("Unkown argument \"" + args[0] + "\"");
+					Console.ReportError("Unkown argument \"" + args[0] + "\"");
 					return false;
 				}
 			}

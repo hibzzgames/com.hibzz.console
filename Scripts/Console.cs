@@ -75,7 +75,7 @@ namespace Hibzz.Console
 		/// Display an error message
 		/// </summary>
 		/// <param name="message"> the message to display </param>
-		public static void LogError(string message)
+		public static void ReportError(string message)
 		{
 			DeveloperConsoleUI.instance.messageUI.SendMessage(message, MessageUI.Type.Error);
 		}
@@ -84,7 +84,7 @@ namespace Hibzz.Console
 		/// Display a warning message
 		/// </summary>
 		/// <param name="message"> The message to display </param>
-		public static void LogWarning(string message)
+		public static void ReportWarning(string message)
 		{
 			DeveloperConsoleUI.instance.messageUI.SendMessage(message, MessageUI.Type.Warning);
 		}
@@ -93,7 +93,7 @@ namespace Hibzz.Console
 		/// Display an "informational" message
 		/// </summary>
 		/// <param name="message"> The message to display </param>
-		public static void LogInfo(string message)
+		public static void ReportInfo(string message)
 		{
 			DeveloperConsoleUI.instance.messageUI.SendMessage(message, MessageUI.Type.Info);		}
 
@@ -101,7 +101,7 @@ namespace Hibzz.Console
 		/// Display a success message
 		/// </summary>
 		/// <param name="message"> The message to display </param>
-		public static void LogSuccess(string message)
+		public static void ReportSuccess(string message)
 		{
 			DeveloperConsoleUI.instance.messageUI.SendMessage(message, MessageUI.Type.Success);
 		}
