@@ -12,15 +12,29 @@ namespace Hibzz.Console
 	{
 		protected int max_size = 0;
 
+		/// <summary>
+		/// Gets the last element added to the queue
+		/// </summary>
+		public T Last { get; protected set; }
+
 		public CyclicQueue(int size)
 		{
 			max_size = size;
 		}
 
+		/// <summary>
+		/// Adds the element to the end of the cyclic queue
+		/// </summary>
+		/// <param name="item"> The item to add </param>
 		public new void Enqueue(T item)
 		{
+			// if the cyclic has reached maximum size, remove the first element
+			// and add the item as a new element
 			if(this.Count == max_size) { this.Dequeue(); }
 			base.Enqueue(item);
+
+			// store the given item as the last item
+			Last = item;
 		}
 
 		/// <summary>

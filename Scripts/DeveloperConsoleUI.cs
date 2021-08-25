@@ -257,8 +257,10 @@ namespace Hibzz.Console
 #else
 			if(!Input.GetKeyDown(KeyCode.Return)) { return; }
 #endif
-			// add the input to the previous command queue
-			PreviousCommands.Enqueue(input);
+			// add the input to the previous command queue (if it's not the
+			// last element in the queue... This helps prevent having repeat
+			// element in the cyclic queue)
+			if (PreviousCommands.Last != input) { PreviousCommands.Enqueue(input); }
 			PreviousCommandMarker = 0;
 
 			// process the command and clear the text field
