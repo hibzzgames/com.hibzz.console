@@ -49,11 +49,10 @@ namespace Hibzz.Console
 		/// <param name="input"> An example input would be "/spawnweapon katana" </param>
 		public void ProcessCommand(string input)
 		{
-			// if it doesn't start with a prefix, print the message to the logger
-			// and break out
+			// if it doesn't start with a prefix, invoke the function that handles what happens to non-command inputs
 			if(!input.StartsWith(prefix)) 
 			{
-				Console.Log(input);
+				Console.OnNonCommandInputEnter.Invoke(input);
 				return; 
 			}
 

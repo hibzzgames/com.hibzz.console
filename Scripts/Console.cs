@@ -137,6 +137,23 @@ namespace Hibzz.Console
 			DeveloperConsoleUI.instance.inputField.placeholder.GetComponent<TMPro.TMP_Text>().text = placeholder;
 		}
 
+		/// <summary>
+		/// Defining a delegate that's called when a non command input is entered in the console
+		/// </summary>
+		/// <param name="input"> The input that was passed in </param>
+		public delegate void OnNonCommandInputEnterDelegate(string input);
+
+		/// <summary>
+		/// The predicate that's called when the user enters a non-command input into the console
+		/// </summary>
+		/// <remarks> Use this to change the behavior on what should happen when the user enters a 
+		/// non-command string into the console. By default, the console logs the input. </remarks>
+		public static OnNonCommandInputEnterDelegate OnNonCommandInputEnter = 
+			(string input) => 
+			{
+				Log(input);
+			};
+
 		#region Deprecated Functions
 
 		[System.Obsolete("This function is deprecate and is slated to be removed in v1.3. Use PostError instead.")]
