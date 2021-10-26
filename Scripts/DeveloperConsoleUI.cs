@@ -268,7 +268,7 @@ namespace Hibzz.Console
 		/// </summary>
 		public void ToggleUI()
 		{
-			uiCanvas.SetActive(uiCanvas.activeSelf);
+			uiCanvas.SetActive(!uiCanvas.activeSelf);
 		}
 
 		/// <summary>
