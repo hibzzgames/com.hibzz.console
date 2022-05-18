@@ -19,6 +19,8 @@ namespace Hibzz.Console
 
 		public override bool Process(string[] args)
 		{
+			#if ENABLE_HIBZZ_CONSOLE_CACHE_DICTIONARY
+							
 			// if there are any arguments passed, check for matching subcommands
 			if(args.Length > 0)
 			{
@@ -35,6 +37,8 @@ namespace Hibzz.Console
 					return false;
 				}
 			}
+
+			#endif
 
 			// clear the console logs
 			Console.Clear();
