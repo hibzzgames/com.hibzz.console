@@ -34,7 +34,7 @@ namespace Hibzz.Console
 			data.DisplayName = "Cache Dictionary";
 			data.Category = "Hibzz.Console";
 			data.Description = "Cache Dictionary is a tool provided by the console that let's " +
-                "commands cache and store data to communicate with each other";
+                "commands cache and store data to communicate with each other.";
 			data.EnableByDefault = false;
 
 			return data;

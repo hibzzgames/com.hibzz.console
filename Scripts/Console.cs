@@ -155,21 +155,5 @@ namespace Hibzz.Console
 			{
 				Log(input);
 			};
-
-#region Deprecated Functions
-
-		[System.Obsolete("This function is deprecate and is slated to be removed in v1.3. Use PostError instead.")]
-		public static void LogError(string message) { }
-
-		[System.Obsolete("This function is deprecate and is slated to be removed in v1.3. Use PostWarning instead.")]
-		public static void LogWarning(string message) { }
-
-		[System.Obsolete("This function is deprecate and is slated to be removed in v1.3. Use PostInfo instead.")]
-		public static void LogInfo(string message) { }
-
-		[System.Obsolete("This function is deprecate and is slated to be removed in v1.3. Use PostSuccess instead.")]
-		public static void LogSuccess(string message) { }
-
-#endregion
 	}
 }
