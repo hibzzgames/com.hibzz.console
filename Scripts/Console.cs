@@ -23,10 +23,12 @@ namespace Hibzz.Console
 		/// </summary>
 		public static bool IsTextboxFocused = false;
 
+		#if ENABLE_HIBZZ_CONSOLE_CACHE_DICTIONARY
 		/// <summary>
 		/// A dictionary to store cache results and intermediary values that can be used in the next process
 		/// </summary>
 		public static Dictionary<string, Object> CacheDictionary = new Dictionary<string, Object>();
+		#endif
 
 		/// <summary>
 		/// Static class that adds a log to the singleton instance
@@ -153,21 +155,5 @@ namespace Hibzz.Console
 			{
 				Log(input);
 			};
-
-		#region Deprecated Functions
-
-		[System.Obsolete("This function is deprecate and is slated to be removed in v1.3. Use PostError instead.")]
-		public static void LogError(string message) { }
-
-		[System.Obsolete("This function is deprecate and is slated to be removed in v1.3. Use PostWarning instead.")]
-		public static void LogWarning(string message) { }
-
-		[System.Obsolete("This function is deprecate and is slated to be removed in v1.3. Use PostInfo instead.")]
-		public static void LogInfo(string message) { }
-
-		[System.Obsolete("This function is deprecate and is slated to be removed in v1.3. Use PostSuccess instead.")]
-		public static void LogSuccess(string message) { }
-
-		#endregion
 	}
 }
