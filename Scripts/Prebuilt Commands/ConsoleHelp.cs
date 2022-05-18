@@ -3,6 +3,7 @@
  * Date:		27 June, 2021 
  */
 
+#if ENABLE_HIBZZ_CONSOLE_PREBUILT_COMMANDS
 using UnityEngine;
 
 namespace Hibzz.Console
@@ -24,3 +25,4 @@ namespace Hibzz.Console
 		}
 	}
 }
+#endif
